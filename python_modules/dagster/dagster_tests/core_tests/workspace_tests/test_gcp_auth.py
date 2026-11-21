@@ -20,11 +20,22 @@ def test_gcp_auth_workspace_config():
     locations = {"load_from": [{"grpc_server": server}]}
     original_origin = location_origins_from_config(locations, "workspace.yaml")["private"]
     assert "gcp_auth_audience" not in serialize_value(original_origin)
-    server["gcp_auth"] = {"audience": AUDIENCE}
+    server["gcp_auth"] = False
+    assert location_origins_from_config(locations, "workspace.yaml")["private"] == original_origin
+
+    server["gcp_auth"] = True
     origin = location_origins_from_config(locations, "workspace.yaml")["private"]
     assert isinstance(origin, GrpcServerCodeLocationOrigin)
     assert origin.gcp_auth_audience == AUDIENCE
     assert deserialize_value(serialize_value(origin), GrpcServerCodeLocationOrigin) == origin
+
+    server["gcp_auth"] = {"audience": AUDIENCE}
+    assert location_origins_from_config(locations, "workspace.yaml")["private"] == origin
+    server["host"] = "canary---private-pipelines.example.run.app"
+    tagged_origin = location_origins_from_config(locations, "workspace.yaml")["private"]
+    assert isinstance(tagged_origin, GrpcServerCodeLocationOrigin)
+    assert tagged_origin.gcp_auth_audience == AUDIENCE
+
     server["ssl"] = False
     with pytest.raises(CheckError, match="requires a TLS gRPC port"):
         location_origins_from_config(locations, "workspace.yaml")

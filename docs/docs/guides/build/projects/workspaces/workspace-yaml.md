@@ -148,7 +148,7 @@ load_from:
 
 ### Authenticate to a Cloud Run code location
 
-Set `gcp_auth.audience` on a TLS gRPC location. Use the receiving Cloud Run service URL or a custom audience configured on that service.
+Set `gcp_auth: true` on a TLS gRPC location. Dagster uses `https://<host>` as the ID token audience. Omit the field or set it to `false` to leave GCP authentication off.
 
 ```yaml
 load_from:
@@ -157,9 +157,10 @@ load_from:
       host: private-pipelines-example.run.app
       port: 443
       ssl: true
-      gcp_auth:
-        audience: https://private-pipelines-example.run.app
+      gcp_auth: true
 ```
+
+Use `gcp_auth: {audience: https://private-pipelines-example.run.app}` when the connection host differs from the service URL, for example when connecting to a Cloud Run traffic-tag URL. You can also specify a custom audience configured on the receiving service.
 
 Install the fork with its `gcp-auth` extra in the webserver and daemon environments. In an existing uv project, `uv add 'google-auth>=2.29'` installs the same dependency. Give their runtime service accounts the Cloud Run Invoker role on the receiving service and configure that service for end-to-end HTTP/2.
 
