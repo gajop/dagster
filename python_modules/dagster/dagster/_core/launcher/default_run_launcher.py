@@ -73,6 +73,11 @@ class DefaultRunLauncher(RunLauncher, ConfigurableClass):
                             else {"socket": grpc_client.socket}
                         ),
                         ({"use_ssl": True} if grpc_client.use_ssl else {}),
+                        (
+                            {"gcp_auth_audience": grpc_client.gcp_auth_audience}
+                            if grpc_client.gcp_auth_audience is not None
+                            else {}
+                        ),
                     )
                 )
             },
@@ -148,6 +153,7 @@ class DefaultRunLauncher(RunLauncher, ConfigurableClass):
             socket=grpc_info.get("socket"),
             host=grpc_info.get("host"),
             use_ssl=bool(grpc_info.get("use_ssl", False)),
+            gcp_auth_audience=grpc_info.get("gcp_auth_audience"),
         )
 
     def terminate(self, run_id):

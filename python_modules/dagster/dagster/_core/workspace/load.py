@@ -320,6 +320,14 @@ def _location_origin_from_grpc_server_config(
         (socket or port) and not (socket and port), "must supply either a socket or a port"
     )
 
+    gcp_auth = grpc_server_config.get("gcp_auth")
+    gcp_auth_audience = gcp_auth["audience"] if gcp_auth else None
+    if gcp_auth_audience is not None:
+        check.invariant(bool(gcp_auth_audience.strip()), "GCP authentication requires an audience.")
+        check.invariant(
+            bool(use_ssl and port), "GCP authentication requires a TLS gRPC port (ssl: true)."
+        )
+
     if not host:
         host = "localhost"
 
@@ -330,6 +338,7 @@ def _location_origin_from_grpc_server_config(
         location_name=location_name,
         use_ssl=use_ssl,
         additional_metadata=additional_metadata,
+        gcp_auth_audience=gcp_auth_audience,
     )
 
 
