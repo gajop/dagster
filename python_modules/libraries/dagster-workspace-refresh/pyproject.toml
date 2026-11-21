@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dagster-workspace-refresh"
+version = "0.1.0"
+description = "Configure deploy-triggered metadata refresh for individual Dagster code locations."
+readme = "README.md"
+requires-python = ">=3.10,<3.15"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = ["dagster==1.13.31", "dagster-webserver==1.13.31"]
+
+[project.scripts]
+dagster-refresh-webserver = "dagster_workspace_refresh:run_webserver"
+dagster-refresh-daemon = "dagster_workspace_refresh:run_daemon"
+dagster-refresh-location = "dagster_workspace_refresh.manual_refresh_cli:refresh_command"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dagster_workspace_refresh"]
+
+[tool.hatch.build.hooks.custom]
