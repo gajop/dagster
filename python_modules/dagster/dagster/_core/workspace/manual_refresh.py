@@ -3,12 +3,14 @@
 import logging
 import os
 import threading
+import uuid
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from dagster_shared.yaml_utils import load_yaml_from_path
 
 import dagster._check as check
+from dagster._core.errors import DagsterCodeLocationNotFoundError, DagsterInvalidInvocationError
 from dagster._core.instance import DagsterInstance
 from dagster._core.remote_origin import CodeLocationOrigin, GrpcServerCodeLocationOrigin
 from dagster._core.remote_representation.grpc_server_registry import GrpcServerRegistry
@@ -84,6 +86,14 @@ def load_workspace_locations(
 
 def deployment_cursor_key(origin: CodeLocationOrigin) -> str:
     return f"workspace-metadata-refresh:{origin.get_id()}"
+
+
+def record_deployment_revision(
+    instance: DagsterInstance, origin: CodeLocationOrigin, revision: str | None
+) -> str:
+    revision = revision or uuid.uuid4().hex
+    instance.daemon_cursor_storage.set_cursor_values({deployment_cursor_key(origin): revision})
+    return revision
 
 
 class ManualRefreshWorkspaceProcessContext(WorkspaceProcessContext):
@@ -225,6 +235,14 @@ class ManualRefreshWorkspaceProcessContext(WorkspaceProcessContext):
     def reload_code_location(self, name: str) -> None:
         with self._manual_refresh_lock:
             super().reload_code_location(name)
+
+    def request_metadata_refresh(self, name: str, revision: str | None = None) -> str:
+        origin = self._manual_origins.get(name)
+        if origin:
+            return record_deployment_revision(self.instance, origin, revision)
+        if name not in self.get_current_workspace().code_location_entries:
+            raise DagsterCodeLocationNotFoundError(f"Unknown code location {name!r}")
+        raise DagsterInvalidInvocationError(f"Code location {name!r} needs refresh_policy: manual")
 
     def _start_watch_thread(self, origin: GrpcServerCodeLocationOrigin) -> None:
         if origin.location_name not in self._manual_origins:
