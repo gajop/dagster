@@ -31,7 +31,7 @@ from dagster._core.remote_origin import (
 )
 from dagster._core.remote_representation.code_location import CodeLocation
 from dagster._core.remote_representation.external import RemoteJob, RemoteRepository
-from dagster._core.workspace.context import WorkspaceProcessContext, WorkspaceRequestContext
+from dagster._core.workspace.context import WorkspaceRequestContext
 from dagster._core.workspace.load_target import (
     CompositeTarget,
     EmptyWorkspaceTarget,
@@ -43,6 +43,9 @@ from dagster._core.workspace.load_target import (
     PythonFileTarget,
     WorkspaceFileTarget,
     WorkspaceLoadTarget,
+)
+from dagster._core.workspace.manual_refresh import (
+    ManualRefreshWorkspaceProcessContext as WorkspaceProcessContext,
 )
 from dagster._grpc.utils import get_loadable_targets
 from dagster._record import record

@@ -23,10 +23,12 @@ if TYPE_CHECKING:
 def load_workspace_process_context_from_yaml_paths(
     instance: DagsterInstance, yaml_paths: Sequence[str], version: str = ""
 ) -> "WorkspaceProcessContext":
-    from dagster._core.workspace.context import WorkspaceProcessContext
     from dagster._core.workspace.load_target import WorkspaceFileTarget
+    from dagster._core.workspace.manual_refresh import ManualRefreshWorkspaceProcessContext
 
-    return WorkspaceProcessContext(instance, WorkspaceFileTarget(paths=yaml_paths), version=version)
+    return ManualRefreshWorkspaceProcessContext(
+        instance, WorkspaceFileTarget(paths=yaml_paths), version=version
+    )
 
 
 def location_origins_from_yaml_paths(

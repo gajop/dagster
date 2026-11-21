@@ -12,10 +12,15 @@ from dagster._cli.project import project_cli
 from dagster._cli.run import run_cli
 from dagster._cli.schedule import schedule_cli
 from dagster._cli.sensor import sensor_cli
+from dagster._core.workspace.manual_refresh_cli import refresh_command
 from dagster.version import __version__
 
 
 def create_dagster_cli():
+    @click.group(commands={"refresh": refresh_command})
+    def workspace():
+        """Manage workspace metadata."""
+
     commands = {
         "api": api_cli,
         "job": job_cli,
@@ -29,6 +34,7 @@ def create_dagster_cli():
         "dev": dev_command,
         "code-server": code_server_cli,
         "definitions": definitions_cli,
+        "workspace": workspace,
     }
 
     @click.group(

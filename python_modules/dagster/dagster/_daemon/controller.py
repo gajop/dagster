@@ -13,8 +13,11 @@ from typing_extensions import Self
 import dagster._check as check
 from dagster._core.instance import DagsterInstance
 from dagster._core.remote_representation.grpc_server_registry import GrpcServerRegistry
-from dagster._core.workspace.context import IWorkspaceProcessContext, WorkspaceProcessContext
+from dagster._core.workspace.context import IWorkspaceProcessContext
 from dagster._core.workspace.load_target import WorkspaceLoadTarget
+from dagster._core.workspace.manual_refresh import (
+    ManualRefreshWorkspaceProcessContext as WorkspaceProcessContext,
+)
 from dagster._daemon.asset_daemon import AssetDaemon
 from dagster._daemon.auto_run_reexecution.event_log_consumer import EventLogConsumerDaemon
 from dagster._daemon.daemon import (
