@@ -1,4 +1,5 @@
 import json
+import re
 import tempfile
 from unittest import mock
 
@@ -7,6 +8,7 @@ from click.testing import CliRunner
 from dagster._core.instance import DagsterInstance
 from dagster._core.telemetry import START_DAGSTER_WEBSERVER, UPDATE_REPO_STATS, hash_name
 from dagster._core.test_utils import instance_for_test
+from dagster._core.workspace.context import WorkspaceProcessContext
 from dagster._core.workspace.load import load_workspace_process_context_from_yaml_paths
 from dagster._utils import file_relative_path
 from dagster._utils.log import get_structlog_json_formatter
@@ -121,6 +123,25 @@ def test_index_view_at_path_prefix(instance):
         assert res.status_code == 200
 
         assert b'"pathPrefix": "/dagster-path",' in res.content
+
+
+@pytest.mark.parametrize(
+    "banner",
+    [None, {"text": 'PROD </script><script>"__PATH_PREFIX__"</script>', "color": "#b91c1c"}],
+)
+def test_index_view_environment_banner(banner):
+    overrides = {"ui": {"environment_banner": banner}} if banner else {}
+    with instance_for_test(overrides=overrides) as instance:
+        with WorkspaceProcessContext(instance, workspace_load_target=None) as workspace:
+            client = TestClient(create_app_from_workspace_process_context(workspace, "/dagster"))
+            response = client.get("/dagster/")
+
+    assert response.status_code == 200
+    match = re.search(r'id="initialization-data"[^>]*>([^<]*)</script>', response.text)
+    assert match
+    data = json.loads(match[1])
+    assert data["environmentBanner"] == banner
+    assert data["pathPrefix"] == "/dagster"
 
 
 def test_graphql_view(instance):

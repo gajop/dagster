@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from collections.abc import Mapping, Sequence
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional, cast
@@ -135,7 +136,21 @@ def dagster_instance_config(
             dagster_config_dict,
         )
 
-    return (check.not_none(dagster_config.value), custom_instance_class)
+    config_value = check.not_none(dagster_config.value)
+    environment_banner = config_value.get("ui", {}).get("environment_banner")
+    if environment_banner:
+        if not environment_banner["text"].strip():
+            raise DagsterInvalidConfigError(
+                "`ui.environment_banner.text` must contain visible text.", [], environment_banner
+            )
+        if not re.fullmatch(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})", environment_banner["color"]):
+            raise DagsterInvalidConfigError(
+                "`ui.environment_banner.color` must use #RGB or #RRGGBB hex notation.",
+                [],
+                environment_banner,
+            )
+
+    return (config_value, custom_instance_class)
 
 
 def config_field_for_configurable_class() -> Field:
@@ -535,6 +550,10 @@ def dagster_instance_config_schema() -> Mapping[str, Field]:
         "run_coordinator": config_field_for_configurable_class(),
         "run_launcher": config_field_for_configurable_class(),
         "default_executor": Field(Selector({"threaded": THREADED_CONFIG}), is_required=False),
+        "ui": Field(
+            {"environment_banner": Field({"text": str, "color": str}, is_required=False)},
+            is_required=False,
+        ),
         "telemetry": Field(
             {"enabled": Field(Bool, is_required=False)},
         ),

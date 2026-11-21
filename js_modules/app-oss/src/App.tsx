@@ -9,11 +9,13 @@ import {LiveDataPollRateContext} from '@dagster-io/ui-core/live-data-provider/Li
 import {Suspense} from 'react';
 import {RecoilRoot} from 'recoil';
 
+import {EnvironmentBanner} from './EnvironmentBanner';
 import {CommunityNux} from './NUX/CommunityNux';
 import {extractInitializationData} from './extractInitializationData';
 import {telemetryLink} from './telemetryLink';
 
-const {pathPrefix, telemetryEnabled, liveDataPollRate, instanceId} = extractInitializationData();
+const {pathPrefix, telemetryEnabled, liveDataPollRate, instanceId, environmentBanner} =
+  extractInitializationData();
 
 const apolloLinks = [logLink, createErrorLink(true), timeStartLink];
 
@@ -41,7 +43,7 @@ export default function AppPage() {
     <RecoilRoot>
       <LiveDataPollRateContext.Provider value={liveDataPollRate ?? 2000}>
         <AppProvider appCache={appCache} config={config} localCacheIdPrefix={instanceId}>
-          <AppLayout>
+          <AppLayout banner={environmentBanner && <EnvironmentBanner {...environmentBanner} />}>
             <ContentRoot />
             <Suspense>
               <CommunityNux />

@@ -13,6 +13,19 @@ def test_instance_yaml_config_not_set(config_filename, caplog):
 
 
 @pytest.mark.parametrize(
+    ("text", "color", "invalid_field"),
+    [("  ", "#fff", "text"), ("PROD", "invalid-color", "color")],
+)
+def test_invalid_environment_banner(tmp_path, text, color, invalid_field):
+    with pytest.raises(
+        dg.DagsterInvalidConfigError, match=rf"ui\.environment_banner\.{invalid_field}"
+    ):
+        dagster_instance_config(
+            str(tmp_path), overrides={"ui": {"environment_banner": {"text": text, "color": color}}}
+        )
+
+
+@pytest.mark.parametrize(
     "config_filename",
     (
         "merged_run_coordinator_concurrency.yaml",
