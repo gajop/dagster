@@ -4,6 +4,8 @@ from typing import cast
 
 import dagster._check as check
 from dagster._config import (
+    Enum,
+    EnumValue,
     EvaluateValueResult,
     Field,
     IntSource,
@@ -98,6 +100,13 @@ WORKSPACE_CONFIG_SCHEMA = {
                             "port": Field(IntSource, is_required=False),
                             "location_name": Field(StringSource, is_required=False),
                             "ssl": Field(bool, is_required=False),
+                            "refresh_policy": Field(
+                                Enum(
+                                    "CodeLocationRefreshPolicy",
+                                    [EnumValue("periodic"), EnumValue("manual")],
+                                ),
+                                is_required=False,
+                            ),
                             "additional_metadata": Field(Permissive(), is_required=False),
                         },
                     },

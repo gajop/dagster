@@ -20,6 +20,7 @@ from dagster._core.remote_representation.grpc_server_registry import (
 )
 from dagster._core.workspace.context import WEBSERVER_GRPC_SERVER_HEARTBEAT_TTL
 from dagster._core.workspace.load_target import WorkspaceLoadTarget
+from dagster._core.workspace.manual_refresh import load_workspace_locations
 from dagster._grpc.constants import INCREASE_TIMEOUT_DAGSTER_YAML_MSG, GrpcServerCommand
 
 if TYPE_CHECKING:
@@ -45,9 +46,13 @@ class ProxyServerManager(AbstractContextManager):
         self._workspace_load_target = check.inst_param(
             workspace_load_target, "workspace_load_target", WorkspaceLoadTarget
         )
+        locations = load_workspace_locations(self._workspace_load_target)
+        self._manual_locations = {
+            name for name, location in locations.items() if location.manual_refresh
+        }
         self._origins = cast(
             "Sequence[GrpcServerCodeLocationOrigin | ManagedGrpcPythonEnvCodeLocationOrigin]",
-            self._workspace_load_target.create_origins(),
+            [location.origin for location in locations.values()],
         )
 
         self._grpc_server_registry: GrpcServerRegistry = self._stack.enter_context(
@@ -129,7 +134,10 @@ class ProxyServerManager(AbstractContextManager):
                     "host": origin.host,
                     "port": origin.port,
                     "socket": origin.socket,
+                    "ssl": origin.use_ssl,
                     "additional_metadata": origin.additional_metadata,
                 }
+                if origin.location_name in self._manual_locations:
+                    server_spec["refresh_policy"] = "manual"
             result.append({"grpc_server": {k: v for k, v in server_spec.items() if v is not None}})
         return result

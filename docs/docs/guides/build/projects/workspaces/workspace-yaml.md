@@ -146,6 +146,29 @@ load_from:
       location_name: 'my_grpc_server'
 ```
 
+### Deploy-triggered refresh for external gRPC locations
+Set `refresh_policy: manual` on an external gRPC location to load its definitions at startup and skip background server-ID checks and workspace metadata reloads.
+
+```yaml
+load_from:
+  - grpc_server:
+      location_name: stable
+      host: stable.example.com
+      port: 443
+      ssl: true
+      refresh_policy: manual
+```
+
+After deploying a revision, record it against the same shared Dagster run storage as the webserver and daemon.
+
+```sh
+dagster workspace refresh -w workspace.yaml stable --revision "$REVISION"
+```
+
+Both processes check shared instance storage every five seconds and refresh this location once per new revision. Omit `--revision` to force a refresh. If a refresh fails, the last working definitions remain available and you can request another refresh after fixing the location.
+
+Locations with `refresh_policy: periodic` or no refresh policy keep their normal behavior. Run launches and active sensor or schedule evaluations continue to contact their code locations.
+
 ## Multiple code locations
 
 You can define multiple code locations in a single `workspace.yaml` file:
