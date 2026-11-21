@@ -521,6 +521,8 @@ def get_concurrency_config() -> Field:
 
 
 def dagster_instance_config_schema() -> Mapping[str, Field]:
+    from dagster._core.definitions.executor_definition import THREADED_CONFIG
+
     return {
         "local_artifact_storage": config_field_for_configurable_class(),
         "compute_logs": config_field_for_configurable_class(),
@@ -532,6 +534,7 @@ def dagster_instance_config_schema() -> Mapping[str, Field]:
         "scheduler": config_field_for_configurable_class(),
         "run_coordinator": config_field_for_configurable_class(),
         "run_launcher": config_field_for_configurable_class(),
+        "default_executor": Field(Selector({"threaded": THREADED_CONFIG}), is_required=False),
         "telemetry": Field(
             {"enabled": Field(Bool, is_required=False)},
         ),

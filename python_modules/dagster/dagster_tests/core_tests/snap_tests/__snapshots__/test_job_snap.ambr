@@ -294,6 +294,47 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Selector.b19d2d46702c686f72c13f2661f3f1396be99554": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
+              "description": "Execute all steps in a single process.",
+              "is_required": false,
+              "name": "in_process",
+              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
+              "description": "Execute each step in an individual process.",
+              "is_required": false,
+              "name": "multiprocess",
+              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Execute independent steps concurrently in threads in the run worker process.",
+              "is_required": true,
+              "name": "threaded",
+              "type_key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6"
+            }
+          ],
+          "given_name": null,
+          "key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554",
+          "kind": {
+            "__enum__": "ConfigTypeKind.SELECTOR"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Selector.be5d518b39e86a43c5f2eecaf538c1f6c7711b59": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -411,38 +452,6 @@
           ],
           "given_name": null,
           "key": "Selector.e04723c9d9937e3ab21206435b22247cfbe58269",
-          "kind": {
-            "__enum__": "ConfigTypeKind.SELECTOR"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
-        "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
-              "description": "Execute all steps in a single process.",
-              "is_required": false,
-              "name": "in_process",
-              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
-              "description": "Execute each step in an individual process.",
-              "is_required": false,
-              "name": "multiprocess",
-              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
-            }
-          ],
-          "given_name": null,
-          "key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050",
           "kind": {
             "__enum__": "ConfigTypeKind.SELECTOR"
           },
@@ -673,7 +682,7 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.47ebd8972af39af73d114a712ef5b119cac765df": {
+        "Shape.2d5605cd4751065fd92958e551833c218c4fd777": {
           "__class__": "ConfigTypeSnap",
           "description": null,
           "enum_values": null,
@@ -681,42 +690,15 @@
             {
               "__class__": "ConfigFieldSnap",
               "default_provided": true,
-              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
-              "description": "Configure how steps are executed within a run.",
+              "default_value_as_json_str": "{\"multiprocess\": {}}",
+              "description": null,
               "is_required": false,
-              "name": "execution",
-              "type_key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{}",
-              "description": "Configure how loggers emit messages within a run.",
-              "is_required": false,
-              "name": "loggers",
-              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"passone\": {}, \"passtwo\": {}, \"return_one\": {}}",
-              "description": "Configure runtime parameters for ops or assets.",
-              "is_required": false,
-              "name": "ops",
-              "type_key": "Shape.952e35310efb5b26c78231361f00461e9a3cacd1"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"io_manager\": {}}",
-              "description": "Configure how shared resources are implemented within a run.",
-              "is_required": false,
-              "name": "resources",
-              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+              "name": "config",
+              "type_key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554"
             }
           ],
           "given_name": null,
-          "key": "Shape.47ebd8972af39af73d114a712ef5b119cac765df",
+          "key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -828,29 +810,6 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"multiprocess\": {}}",
-              "description": null,
-              "is_required": false,
-              "name": "config",
-              "type_key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050"
-            }
-          ],
-          "given_name": null,
-          "key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9",
-          "kind": {
-            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
         "Shape.743e47901855cb245064dd633e217bfcb49a11a7": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -915,6 +874,38 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Maximum number of steps to execute concurrently.",
+              "is_required": true,
+              "name": "max_concurrent",
+              "type_key": "Int"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"enabled\": {}}",
+              "description": "Whether retries are enabled or not. By default, retries are enabled.",
+              "is_required": false,
+              "name": "retries",
+              "type_key": "Selector.1bfb167aea90780aa679597800c71bd8c65ed0b2"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Shape.c1b51cfcee4bafa04a39110cb65b6e600e4d98d3": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -968,6 +959,56 @@
           ],
           "given_name": null,
           "key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.fe0860f1d711e78b5e10b8da44d307f25af53f69": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
+              "description": "Configure how steps are executed within a run.",
+              "is_required": false,
+              "name": "execution",
+              "type_key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{}",
+              "description": "Configure how loggers emit messages within a run.",
+              "is_required": false,
+              "name": "loggers",
+              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"passone\": {}, \"passtwo\": {}, \"return_one\": {}}",
+              "description": "Configure runtime parameters for ops or assets.",
+              "is_required": false,
+              "name": "ops",
+              "type_key": "Shape.952e35310efb5b26c78231361f00461e9a3cacd1"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"io_manager\": {}}",
+              "description": "Configure how shared resources are implemented within a run.",
+              "is_required": false,
+              "name": "resources",
+              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.fe0860f1d711e78b5e10b8da44d307f25af53f69",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -1175,7 +1216,7 @@
             "name": "io_manager"
           }
         ],
-        "root_config_key": "Shape.47ebd8972af39af73d114a712ef5b119cac765df"
+        "root_config_key": "Shape.fe0860f1d711e78b5e10b8da44d307f25af53f69"
       }
     ],
     "name": "single_dep_job",
@@ -1251,7 +1292,7 @@
   '''
 # ---
 # name: test_basic_dep_fan_out.1
-  'b79f9f7535b754b1baba65141bf73ec5fb898405'
+  '3d4e3f372cd0b59fc7aa999b4fbde2511b989a4b'
 # ---
 # name: test_basic_fan_in
   '''
@@ -1548,6 +1589,47 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Selector.b19d2d46702c686f72c13f2661f3f1396be99554": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
+              "description": "Execute all steps in a single process.",
+              "is_required": false,
+              "name": "in_process",
+              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
+              "description": "Execute each step in an individual process.",
+              "is_required": false,
+              "name": "multiprocess",
+              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Execute independent steps concurrently in threads in the run worker process.",
+              "is_required": true,
+              "name": "threaded",
+              "type_key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6"
+            }
+          ],
+          "given_name": null,
+          "key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554",
+          "kind": {
+            "__enum__": "ConfigTypeKind.SELECTOR"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Selector.be5d518b39e86a43c5f2eecaf538c1f6c7711b59": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -1665,38 +1747,6 @@
           ],
           "given_name": null,
           "key": "Selector.e04723c9d9937e3ab21206435b22247cfbe58269",
-          "kind": {
-            "__enum__": "ConfigTypeKind.SELECTOR"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
-        "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
-              "description": "Execute all steps in a single process.",
-              "is_required": false,
-              "name": "in_process",
-              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
-              "description": "Execute each step in an individual process.",
-              "is_required": false,
-              "name": "multiprocess",
-              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
-            }
-          ],
-          "given_name": null,
-          "key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050",
           "kind": {
             "__enum__": "ConfigTypeKind.SELECTOR"
           },
@@ -1927,7 +1977,7 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.2adb98a02e14aea8d3f0978dc98bb344d6939605": {
+        "Shape.2d5605cd4751065fd92958e551833c218c4fd777": {
           "__class__": "ConfigTypeSnap",
           "description": null,
           "enum_values": null,
@@ -1935,42 +1985,15 @@
             {
               "__class__": "ConfigFieldSnap",
               "default_provided": true,
-              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
-              "description": "Configure how steps are executed within a run.",
+              "default_value_as_json_str": "{\"multiprocess\": {}}",
+              "description": null,
               "is_required": false,
-              "name": "execution",
-              "type_key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{}",
-              "description": "Configure how loggers emit messages within a run.",
-              "is_required": false,
-              "name": "loggers",
-              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"nothing_one\": {}, \"nothing_two\": {}, \"take_nothings\": {}}",
-              "description": "Configure runtime parameters for ops or assets.",
-              "is_required": false,
-              "name": "ops",
-              "type_key": "Shape.73489027a6f87769531860a5561ac0407d5dbb51"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"io_manager\": {}}",
-              "description": "Configure how shared resources are implemented within a run.",
-              "is_required": false,
-              "name": "resources",
-              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+              "name": "config",
+              "type_key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554"
             }
           ],
           "given_name": null,
-          "key": "Shape.2adb98a02e14aea8d3f0978dc98bb344d6939605",
+          "key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -2082,7 +2105,7 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9": {
+        "Shape.663dd299b585db9b36305086946198919aefa0d0": {
           "__class__": "ConfigTypeSnap",
           "description": null,
           "enum_values": null,
@@ -2090,15 +2113,42 @@
             {
               "__class__": "ConfigFieldSnap",
               "default_provided": true,
-              "default_value_as_json_str": "{\"multiprocess\": {}}",
-              "description": null,
+              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
+              "description": "Configure how steps are executed within a run.",
               "is_required": false,
-              "name": "config",
-              "type_key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050"
+              "name": "execution",
+              "type_key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{}",
+              "description": "Configure how loggers emit messages within a run.",
+              "is_required": false,
+              "name": "loggers",
+              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"nothing_one\": {}, \"nothing_two\": {}, \"take_nothings\": {}}",
+              "description": "Configure runtime parameters for ops or assets.",
+              "is_required": false,
+              "name": "ops",
+              "type_key": "Shape.73489027a6f87769531860a5561ac0407d5dbb51"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"io_manager\": {}}",
+              "description": "Configure how shared resources are implemented within a run.",
+              "is_required": false,
+              "name": "resources",
+              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
             }
           ],
           "given_name": null,
-          "key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9",
+          "key": "Shape.663dd299b585db9b36305086946198919aefa0d0",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -2163,6 +2213,38 @@
           ],
           "given_name": null,
           "key": "Shape.743e47901855cb245064dd633e217bfcb49a11a7",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Maximum number of steps to execute concurrently.",
+              "is_required": true,
+              "name": "max_concurrent",
+              "type_key": "Int"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"enabled\": {}}",
+              "description": "Whether retries are enabled or not. By default, retries are enabled.",
+              "is_required": false,
+              "name": "retries",
+              "type_key": "Selector.1bfb167aea90780aa679597800c71bd8c65ed0b2"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -2421,7 +2503,7 @@
             "name": "io_manager"
           }
         ],
-        "root_config_key": "Shape.2adb98a02e14aea8d3f0978dc98bb344d6939605"
+        "root_config_key": "Shape.663dd299b585db9b36305086946198919aefa0d0"
       }
     ],
     "name": "fan_in_test",
@@ -2497,7 +2579,7 @@
   '''
 # ---
 # name: test_basic_fan_in.1
-  '63abee692248ff6eabcd376012de5795a95810d3'
+  'f3067b18b1bc0e1f6fbedd8e71b76ccd8ce67c5d'
 # ---
 # name: test_deserialize_node_def_snaps_multi_type_config
   '''
@@ -2830,6 +2912,47 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Selector.b19d2d46702c686f72c13f2661f3f1396be99554": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
+              "description": "Execute all steps in a single process.",
+              "is_required": false,
+              "name": "in_process",
+              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
+              "description": "Execute each step in an individual process.",
+              "is_required": false,
+              "name": "multiprocess",
+              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Execute independent steps concurrently in threads in the run worker process.",
+              "is_required": true,
+              "name": "threaded",
+              "type_key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6"
+            }
+          ],
+          "given_name": null,
+          "key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554",
+          "kind": {
+            "__enum__": "ConfigTypeKind.SELECTOR"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Selector.be5d518b39e86a43c5f2eecaf538c1f6c7711b59": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -2947,38 +3070,6 @@
           ],
           "given_name": null,
           "key": "Selector.e04723c9d9937e3ab21206435b22247cfbe58269",
-          "kind": {
-            "__enum__": "ConfigTypeKind.SELECTOR"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
-        "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
-              "description": "Execute all steps in a single process.",
-              "is_required": false,
-              "name": "in_process",
-              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
-              "description": "Execute each step in an individual process.",
-              "is_required": false,
-              "name": "multiprocess",
-              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
-            }
-          ],
-          "given_name": null,
-          "key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050",
           "kind": {
             "__enum__": "ConfigTypeKind.SELECTOR"
           },
@@ -3232,7 +3323,7 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62": {
+        "Shape.2d5605cd4751065fd92958e551833c218c4fd777": {
           "__class__": "ConfigTypeSnap",
           "description": null,
           "enum_values": null,
@@ -3240,42 +3331,15 @@
             {
               "__class__": "ConfigFieldSnap",
               "default_provided": true,
-              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
-              "description": "Configure how steps are executed within a run.",
+              "default_value_as_json_str": "{\"multiprocess\": {}}",
+              "description": null,
               "is_required": false,
-              "name": "execution",
-              "type_key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{}",
-              "description": "Configure how loggers emit messages within a run.",
-              "is_required": false,
-              "name": "loggers",
-              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"noop_op\": {}}",
-              "description": "Configure runtime parameters for ops or assets.",
-              "is_required": false,
-              "name": "ops",
-              "type_key": "Shape.242592fa9f0be8d5908506e918e119be06358618"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"io_manager\": {}}",
-              "description": "Configure how shared resources are implemented within a run.",
-              "is_required": false,
-              "name": "resources",
-              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+              "name": "config",
+              "type_key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554"
             }
           ],
           "given_name": null,
-          "key": "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62",
+          "key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -3387,29 +3451,6 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"multiprocess\": {}}",
-              "description": null,
-              "is_required": false,
-              "name": "config",
-              "type_key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050"
-            }
-          ],
-          "given_name": null,
-          "key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9",
-          "kind": {
-            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
         "Shape.743e47901855cb245064dd633e217bfcb49a11a7": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -3427,6 +3468,88 @@
           ],
           "given_name": null,
           "key": "Shape.743e47901855cb245064dd633e217bfcb49a11a7",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.78524a8c76226a1c566314f84c39a2f76660c998": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
+              "description": "Configure how steps are executed within a run.",
+              "is_required": false,
+              "name": "execution",
+              "type_key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{}",
+              "description": "Configure how loggers emit messages within a run.",
+              "is_required": false,
+              "name": "loggers",
+              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"noop_op\": {}}",
+              "description": "Configure runtime parameters for ops or assets.",
+              "is_required": false,
+              "name": "ops",
+              "type_key": "Shape.242592fa9f0be8d5908506e918e119be06358618"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"io_manager\": {}}",
+              "description": "Configure how shared resources are implemented within a run.",
+              "is_required": false,
+              "name": "resources",
+              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.78524a8c76226a1c566314f84c39a2f76660c998",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Maximum number of steps to execute concurrently.",
+              "is_required": true,
+              "name": "max_concurrent",
+              "type_key": "Int"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"enabled\": {}}",
+              "description": "Whether retries are enabled or not. By default, retries are enabled.",
+              "is_required": false,
+              "name": "retries",
+              "type_key": "Selector.1bfb167aea90780aa679597800c71bd8c65ed0b2"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -3651,7 +3774,7 @@
             "name": "io_manager"
           }
         ],
-        "root_config_key": "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62"
+        "root_config_key": "Shape.78524a8c76226a1c566314f84c39a2f76660c998"
       }
     ],
     "name": "noop_job",
@@ -3693,7 +3816,7 @@
   '''
 # ---
 # name: test_empty_job_snap_props.1
-  '99e0301b80cfe82d2bec98fec8896ae1c55d0e0d'
+  '9f50381d8a93fd6d4059176d1b343f70e5386778'
 # ---
 # name: test_empty_job_snap_snapshot
   '''
@@ -3990,6 +4113,47 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Selector.b19d2d46702c686f72c13f2661f3f1396be99554": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
+              "description": "Execute all steps in a single process.",
+              "is_required": false,
+              "name": "in_process",
+              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
+              "description": "Execute each step in an individual process.",
+              "is_required": false,
+              "name": "multiprocess",
+              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Execute independent steps concurrently in threads in the run worker process.",
+              "is_required": true,
+              "name": "threaded",
+              "type_key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6"
+            }
+          ],
+          "given_name": null,
+          "key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554",
+          "kind": {
+            "__enum__": "ConfigTypeKind.SELECTOR"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Selector.be5d518b39e86a43c5f2eecaf538c1f6c7711b59": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -4107,38 +4271,6 @@
           ],
           "given_name": null,
           "key": "Selector.e04723c9d9937e3ab21206435b22247cfbe58269",
-          "kind": {
-            "__enum__": "ConfigTypeKind.SELECTOR"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
-        "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
-              "description": "Execute all steps in a single process.",
-              "is_required": false,
-              "name": "in_process",
-              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
-              "description": "Execute each step in an individual process.",
-              "is_required": false,
-              "name": "multiprocess",
-              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
-            }
-          ],
-          "given_name": null,
-          "key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050",
           "kind": {
             "__enum__": "ConfigTypeKind.SELECTOR"
           },
@@ -4392,7 +4524,7 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62": {
+        "Shape.2d5605cd4751065fd92958e551833c218c4fd777": {
           "__class__": "ConfigTypeSnap",
           "description": null,
           "enum_values": null,
@@ -4400,42 +4532,15 @@
             {
               "__class__": "ConfigFieldSnap",
               "default_provided": true,
-              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
-              "description": "Configure how steps are executed within a run.",
+              "default_value_as_json_str": "{\"multiprocess\": {}}",
+              "description": null,
               "is_required": false,
-              "name": "execution",
-              "type_key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{}",
-              "description": "Configure how loggers emit messages within a run.",
-              "is_required": false,
-              "name": "loggers",
-              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"noop_op\": {}}",
-              "description": "Configure runtime parameters for ops or assets.",
-              "is_required": false,
-              "name": "ops",
-              "type_key": "Shape.242592fa9f0be8d5908506e918e119be06358618"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"io_manager\": {}}",
-              "description": "Configure how shared resources are implemented within a run.",
-              "is_required": false,
-              "name": "resources",
-              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+              "name": "config",
+              "type_key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554"
             }
           ],
           "given_name": null,
-          "key": "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62",
+          "key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -4547,29 +4652,6 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"multiprocess\": {}}",
-              "description": null,
-              "is_required": false,
-              "name": "config",
-              "type_key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050"
-            }
-          ],
-          "given_name": null,
-          "key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9",
-          "kind": {
-            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
         "Shape.743e47901855cb245064dd633e217bfcb49a11a7": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -4587,6 +4669,88 @@
           ],
           "given_name": null,
           "key": "Shape.743e47901855cb245064dd633e217bfcb49a11a7",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.78524a8c76226a1c566314f84c39a2f76660c998": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
+              "description": "Configure how steps are executed within a run.",
+              "is_required": false,
+              "name": "execution",
+              "type_key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{}",
+              "description": "Configure how loggers emit messages within a run.",
+              "is_required": false,
+              "name": "loggers",
+              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"noop_op\": {}}",
+              "description": "Configure runtime parameters for ops or assets.",
+              "is_required": false,
+              "name": "ops",
+              "type_key": "Shape.242592fa9f0be8d5908506e918e119be06358618"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"io_manager\": {}}",
+              "description": "Configure how shared resources are implemented within a run.",
+              "is_required": false,
+              "name": "resources",
+              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.78524a8c76226a1c566314f84c39a2f76660c998",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Maximum number of steps to execute concurrently.",
+              "is_required": true,
+              "name": "max_concurrent",
+              "type_key": "Int"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"enabled\": {}}",
+              "description": "Whether retries are enabled or not. By default, retries are enabled.",
+              "is_required": false,
+              "name": "retries",
+              "type_key": "Selector.1bfb167aea90780aa679597800c71bd8c65ed0b2"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -4811,7 +4975,7 @@
             "name": "io_manager"
           }
         ],
-        "root_config_key": "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62"
+        "root_config_key": "Shape.78524a8c76226a1c566314f84c39a2f76660c998"
       }
     ],
     "name": "noop_job",
@@ -5147,6 +5311,47 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Selector.b19d2d46702c686f72c13f2661f3f1396be99554": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
+              "description": "Execute all steps in a single process.",
+              "is_required": false,
+              "name": "in_process",
+              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
+              "description": "Execute each step in an individual process.",
+              "is_required": false,
+              "name": "multiprocess",
+              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Execute independent steps concurrently in threads in the run worker process.",
+              "is_required": true,
+              "name": "threaded",
+              "type_key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6"
+            }
+          ],
+          "given_name": null,
+          "key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554",
+          "kind": {
+            "__enum__": "ConfigTypeKind.SELECTOR"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Selector.be5d518b39e86a43c5f2eecaf538c1f6c7711b59": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -5264,38 +5469,6 @@
           ],
           "given_name": null,
           "key": "Selector.e04723c9d9937e3ab21206435b22247cfbe58269",
-          "kind": {
-            "__enum__": "ConfigTypeKind.SELECTOR"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
-        "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
-              "description": "Execute all steps in a single process.",
-              "is_required": false,
-              "name": "in_process",
-              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
-              "description": "Execute each step in an individual process.",
-              "is_required": false,
-              "name": "multiprocess",
-              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
-            }
-          ],
-          "given_name": null,
-          "key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050",
           "kind": {
             "__enum__": "ConfigTypeKind.SELECTOR"
           },
@@ -5549,7 +5722,7 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62": {
+        "Shape.2d5605cd4751065fd92958e551833c218c4fd777": {
           "__class__": "ConfigTypeSnap",
           "description": null,
           "enum_values": null,
@@ -5557,42 +5730,15 @@
             {
               "__class__": "ConfigFieldSnap",
               "default_provided": true,
-              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
-              "description": "Configure how steps are executed within a run.",
+              "default_value_as_json_str": "{\"multiprocess\": {}}",
+              "description": null,
               "is_required": false,
-              "name": "execution",
-              "type_key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{}",
-              "description": "Configure how loggers emit messages within a run.",
-              "is_required": false,
-              "name": "loggers",
-              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"noop_op\": {}}",
-              "description": "Configure runtime parameters for ops or assets.",
-              "is_required": false,
-              "name": "ops",
-              "type_key": "Shape.242592fa9f0be8d5908506e918e119be06358618"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"io_manager\": {}}",
-              "description": "Configure how shared resources are implemented within a run.",
-              "is_required": false,
-              "name": "resources",
-              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+              "name": "config",
+              "type_key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554"
             }
           ],
           "given_name": null,
-          "key": "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62",
+          "key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -5704,29 +5850,6 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"multiprocess\": {}}",
-              "description": null,
-              "is_required": false,
-              "name": "config",
-              "type_key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050"
-            }
-          ],
-          "given_name": null,
-          "key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9",
-          "kind": {
-            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
         "Shape.743e47901855cb245064dd633e217bfcb49a11a7": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -5744,6 +5867,88 @@
           ],
           "given_name": null,
           "key": "Shape.743e47901855cb245064dd633e217bfcb49a11a7",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.78524a8c76226a1c566314f84c39a2f76660c998": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
+              "description": "Configure how steps are executed within a run.",
+              "is_required": false,
+              "name": "execution",
+              "type_key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{}",
+              "description": "Configure how loggers emit messages within a run.",
+              "is_required": false,
+              "name": "loggers",
+              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"noop_op\": {}}",
+              "description": "Configure runtime parameters for ops or assets.",
+              "is_required": false,
+              "name": "ops",
+              "type_key": "Shape.242592fa9f0be8d5908506e918e119be06358618"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"io_manager\": {}}",
+              "description": "Configure how shared resources are implemented within a run.",
+              "is_required": false,
+              "name": "resources",
+              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.78524a8c76226a1c566314f84c39a2f76660c998",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Maximum number of steps to execute concurrently.",
+              "is_required": true,
+              "name": "max_concurrent",
+              "type_key": "Int"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"enabled\": {}}",
+              "description": "Whether retries are enabled or not. By default, retries are enabled.",
+              "is_required": false,
+              "name": "retries",
+              "type_key": "Selector.1bfb167aea90780aa679597800c71bd8c65ed0b2"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -5968,7 +6173,7 @@
             "name": "io_manager"
           }
         ],
-        "root_config_key": "Shape.30ba60967b6fbbb99f58d7d7cadf9dc4fa66aa62"
+        "root_config_key": "Shape.78524a8c76226a1c566314f84c39a2f76660c998"
       }
     ],
     "name": "noop_job",
@@ -6012,7 +6217,7 @@
   '''
 # ---
 # name: test_job_snap_all_props.1
-  '7c88c3727ac43700821265e6519b2a322011d0a3'
+  '5524f987bc024a1fafd27194198cf12fc2bf7cd8'
 # ---
 # name: test_multi_type_config_array_dict_fields[Permissive]
   '''
@@ -6547,6 +6752,47 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Selector.b19d2d46702c686f72c13f2661f3f1396be99554": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
+              "description": "Execute all steps in a single process.",
+              "is_required": false,
+              "name": "in_process",
+              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
+              "description": "Execute each step in an individual process.",
+              "is_required": false,
+              "name": "multiprocess",
+              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Execute independent steps concurrently in threads in the run worker process.",
+              "is_required": true,
+              "name": "threaded",
+              "type_key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6"
+            }
+          ],
+          "given_name": null,
+          "key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554",
+          "kind": {
+            "__enum__": "ConfigTypeKind.SELECTOR"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Selector.be5d518b39e86a43c5f2eecaf538c1f6c7711b59": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -6664,38 +6910,6 @@
           ],
           "given_name": null,
           "key": "Selector.e04723c9d9937e3ab21206435b22247cfbe58269",
-          "kind": {
-            "__enum__": "ConfigTypeKind.SELECTOR"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
-        "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"retries\": {\"enabled\": {}}}",
-              "description": "Execute all steps in a single process.",
-              "is_required": false,
-              "name": "in_process",
-              "type_key": "Shape.01b2c92ded97d2dd2ca2591c9ca93d8abac33ee4"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}",
-              "description": "Execute each step in an individual process.",
-              "is_required": false,
-              "name": "multiprocess",
-              "type_key": "Shape.545b4fe7b931974fcf2c79c1c4566a6f5c19324e"
-            }
-          ],
-          "given_name": null,
-          "key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050",
           "kind": {
             "__enum__": "ConfigTypeKind.SELECTOR"
           },
@@ -6903,6 +7117,56 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
+        "Shape.248bf203e6d70b94a73c6902bb46d83c9b822e24": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
+              "description": "Configure how steps are executed within a run.",
+              "is_required": false,
+              "name": "execution",
+              "type_key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{}",
+              "description": "Configure how loggers emit messages within a run.",
+              "is_required": false,
+              "name": "loggers",
+              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"one\": {}, \"two\": {}}",
+              "description": "Configure runtime parameters for ops or assets.",
+              "is_required": false,
+              "name": "ops",
+              "type_key": "Shape.a5a68088e42f4b99cc993bae2b87b445310de808"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"io_manager\": {}}",
+              "description": "Configure how shared resources are implemented within a run.",
+              "is_required": false,
+              "name": "resources",
+              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.248bf203e6d70b94a73c6902bb46d83c9b822e24",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
         "Shape.24ddf8da2b4484ca9c900e229e17286c1e1f6e85": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -6920,6 +7184,29 @@
           ],
           "given_name": null,
           "key": "Shape.24ddf8da2b4484ca9c900e229e17286c1e1f6e85",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.2d5605cd4751065fd92958e551833c218c4fd777": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"multiprocess\": {}}",
+              "description": null,
+              "is_required": false,
+              "name": "config",
+              "type_key": "Selector.b19d2d46702c686f72c13f2661f3f1396be99554"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.2d5605cd4751065fd92958e551833c218c4fd777",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -7031,29 +7318,6 @@
           "scalar_kind": null,
           "type_param_keys": null
         },
-        "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"multiprocess\": {}}",
-              "description": null,
-              "is_required": false,
-              "name": "config",
-              "type_key": "Selector.ed9b2d3490cfa7d271138021fc294098f40fd050"
-            }
-          ],
-          "given_name": null,
-          "key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9",
-          "kind": {
-            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
         "Shape.743e47901855cb245064dd633e217bfcb49a11a7": {
           "__class__": "ConfigTypeSnap",
           "description": null,
@@ -7071,6 +7335,38 @@
           ],
           "given_name": null,
           "key": "Shape.743e47901855cb245064dd633e217bfcb49a11a7",
+          "kind": {
+            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
+          },
+          "scalar_kind": null,
+          "type_param_keys": null
+        },
+        "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6": {
+          "__class__": "ConfigTypeSnap",
+          "description": null,
+          "enum_values": null,
+          "fields": [
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": false,
+              "default_value_as_json_str": null,
+              "description": "Maximum number of steps to execute concurrently.",
+              "is_required": true,
+              "name": "max_concurrent",
+              "type_key": "Int"
+            },
+            {
+              "__class__": "ConfigFieldSnap",
+              "default_provided": true,
+              "default_value_as_json_str": "{\"enabled\": {}}",
+              "description": "Whether retries are enabled or not. By default, retries are enabled.",
+              "is_required": false,
+              "name": "retries",
+              "type_key": "Selector.1bfb167aea90780aa679597800c71bd8c65ed0b2"
+            }
+          ],
+          "given_name": null,
+          "key": "Shape.a2395cad15362bc498add66cec172ed9eae7e7f6",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -7126,56 +7422,6 @@
           ],
           "given_name": null,
           "key": "Shape.c1b51cfcee4bafa04a39110cb65b6e600e4d98d3",
-          "kind": {
-            "__enum__": "ConfigTypeKind.STRICT_SHAPE"
-          },
-          "scalar_kind": null,
-          "type_param_keys": null
-        },
-        "Shape.d2e7a7feeff911f37694aaae814ccf71897b2538": {
-          "__class__": "ConfigTypeSnap",
-          "description": null,
-          "enum_values": null,
-          "fields": [
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"config\": {\"multiprocess\": {\"max_concurrent\": null, \"retries\": {\"enabled\": {}}}}}",
-              "description": "Configure how steps are executed within a run.",
-              "is_required": false,
-              "name": "execution",
-              "type_key": "Shape.665b5efbd6ea3e525248eb49476a99588c3a0ce9"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{}",
-              "description": "Configure how loggers emit messages within a run.",
-              "is_required": false,
-              "name": "loggers",
-              "type_key": "Shape.e895d95ee6d0eff1b884c76f44a2ab7089f0c49b"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"one\": {}, \"two\": {}}",
-              "description": "Configure runtime parameters for ops or assets.",
-              "is_required": false,
-              "name": "ops",
-              "type_key": "Shape.a5a68088e42f4b99cc993bae2b87b445310de808"
-            },
-            {
-              "__class__": "ConfigFieldSnap",
-              "default_provided": true,
-              "default_value_as_json_str": "{\"io_manager\": {}}",
-              "description": "Configure how shared resources are implemented within a run.",
-              "is_required": false,
-              "name": "resources",
-              "type_key": "Shape.1578133c1c71e8e3c9cf3ad46c216eb51b48c778"
-            }
-          ],
-          "given_name": null,
-          "key": "Shape.d2e7a7feeff911f37694aaae814ccf71897b2538",
           "kind": {
             "__enum__": "ConfigTypeKind.STRICT_SHAPE"
           },
@@ -7385,7 +7631,7 @@
             "name": "io_manager"
           }
         ],
-        "root_config_key": "Shape.d2e7a7feeff911f37694aaae814ccf71897b2538"
+        "root_config_key": "Shape.248bf203e6d70b94a73c6902bb46d83c9b822e24"
       }
     ],
     "name": "two_op_job",
@@ -7427,5 +7673,5 @@
   '''
 # ---
 # name: test_two_invocations_deps_snap.1
-  '7c041f7e12d1f0503bb105c496024aa5d40e0b1b'
+  '467946207023856fc32dff18ac9d07016996fc2a'
 # ---

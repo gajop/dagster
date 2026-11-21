@@ -127,6 +127,8 @@ class ResolvedRunConfig(
     def build(
         job_def: JobDefinition,
         run_config: Mapping[str, object] | None = None,
+        *,
+        default_executor: Mapping[str, object] | None = None,
     ) -> "ResolvedRunConfig":
         """This method validates a given run config against the pipeline config schema. If
         successful, we instantiate an ResolvedRunConfig object.
@@ -152,6 +154,14 @@ class ResolvedRunConfig(
                 run_config = run_config_schema.config_mapping.resolve_from_unvalidated_config(
                     run_config
                 )
+
+        if (
+            default_executor
+            and not job_def.has_specified_executor
+            and isinstance(run_config, Mapping)
+            and ("execution" not in run_config or run_config["execution"] == {})
+        ):
+            run_config = {**run_config, "execution": {"config": default_executor}}
 
         config_evr = process_config(
             run_config_schema.run_config_schema_type, check.not_none(run_config)
