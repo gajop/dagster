@@ -98,6 +98,12 @@ WORKSPACE_CONFIG_SCHEMA = {
                             "port": Field(IntSource, is_required=False),
                             "location_name": Field(StringSource, is_required=False),
                             "ssl": Field(bool, is_required=False),
+                            "gcp_auth": Field(
+                                ScalarUnion(
+                                    scalar_type=bool, non_scalar_schema={"audience": StringSource}
+                                ),
+                                is_required=False,
+                            ),
                             "additional_metadata": Field(Permissive(), is_required=False),
                         },
                     },

@@ -146,6 +146,26 @@ load_from:
       location_name: 'my_grpc_server'
 ```
 
+### Authenticate to a Cloud Run code location
+
+Set `gcp_auth: true` on a TLS gRPC location. Dagster uses `https://<host>` as the ID token audience. Omit the field or set it to `false` to leave GCP authentication off.
+
+```yaml
+load_from:
+  - grpc_server:
+      location_name: private-pipelines
+      host: private-pipelines-example.run.app
+      port: 443
+      ssl: true
+      gcp_auth: true
+```
+
+Use `gcp_auth: {audience: https://private-pipelines-example.run.app}` when the connection host differs from the service URL, for example when connecting to a Cloud Run traffic-tag URL. You can also specify a custom audience configured on the receiving service.
+
+Install Dagster with its `gcp-auth` extra in the webserver and daemon environments. In an existing uv project, `uv add 'google-auth>=2.29'` installs the same dependency. Give their runtime service accounts the Cloud Run Invoker role on the receiving service and configure that service for end-to-end HTTP/2.
+
+Dagster uses the caller's Google identity to obtain an ID token for the audience, caches and refreshes it, and sends it in gRPC `Authorization: Bearer` metadata. The code-location container keeps its usual Dagster command. [Cloud Run service-to-service authentication](https://docs.cloud.google.com/run/docs/authenticating/service-to-service)
+
 ## Multiple code locations
 
 You can define multiple code locations in a single `workspace.yaml` file:

@@ -1033,8 +1033,11 @@ class WorkspaceProcessContext(IWorkspaceProcessContext[WorkspaceRequestContext])
                     "host": origin.host,
                     "port": origin.port,
                     "socket": origin.socket,
+                    "ssl": origin.use_ssl,
                     "additional_metadata": origin.additional_metadata,
                 }
+                if origin.gcp_auth_audience is not None:
+                    server_spec["gcp_auth"] = {"audience": origin.gcp_auth_audience}
             else:
                 check.failed(f"Unexpected origin type {origin}")
             result.append({"grpc_server": {k: v for k, v in server_spec.items() if v is not None}})

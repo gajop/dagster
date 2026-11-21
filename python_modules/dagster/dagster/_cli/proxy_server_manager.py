@@ -131,5 +131,8 @@ class ProxyServerManager(AbstractContextManager):
                     "socket": origin.socket,
                     "additional_metadata": origin.additional_metadata,
                 }
+                if origin.gcp_auth_audience is not None:
+                    server_spec["ssl"] = origin.use_ssl
+                    server_spec["gcp_auth"] = {"audience": origin.gcp_auth_audience}
             result.append({"grpc_server": {k: v for k, v in server_spec.items() if v is not None}})
         return result

@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 from collections.abc import AsyncIterable, AsyncIterator, Iterator, Sequence
@@ -12,7 +13,7 @@ from grpc_health.v1 import health_pb2
 from grpc_health.v1.health_pb2_grpc import HealthStub
 
 import dagster._check as check
-from dagster._core.errors import DagsterUserCodeUnreachableError
+from dagster._core.errors import DagsterInvalidInvocationError, DagsterUserCodeUnreachableError
 from dagster._core.events import EngineEventData
 from dagster._core.instance import DagsterInstance
 from dagster._core.remote_origin import RemoteRepositoryOrigin
@@ -76,6 +77,7 @@ class DagsterGrpcClient:
         host: str = "localhost",
         use_ssl: bool = False,
         metadata: Sequence[tuple[str, str]] | None = None,
+        gcp_auth_audience: str | None = None,
     ):
         self.port = check.opt_int_param(port, "port")
 
@@ -86,6 +88,26 @@ class DagsterGrpcClient:
         self._ssl_creds = grpc.ssl_channel_credentials() if use_ssl else None
 
         self._metadata = check.opt_sequence_param(metadata, "metadata")
+        self._gcp_auth_audience = check.opt_str_param(gcp_auth_audience, "gcp_auth_audience")
+        self._gcp_id_token_provider = None
+        if self._gcp_auth_audience is not None:
+            check.invariant(
+                bool(self._gcp_auth_audience.strip()), "GCP authentication requires an audience."
+            )
+            check.invariant(
+                bool(use_ssl and port), "GCP authentication requires a TLS gRPC port (ssl: true)."
+            )
+            check.invariant(
+                all(key.lower() != "authorization" for key, _ in self._metadata),
+                "GCP authentication supplies its own authorization metadata.",
+            )
+            try:
+                from dagster._grpc.gcp_auth import gcp_id_token_provider
+            except ModuleNotFoundError as exc:
+                raise DagsterInvalidInvocationError(
+                    "Install Dagster with the gcp-auth extra to authenticate to GCP code locations."
+                ) from exc
+            self._gcp_id_token_provider = gcp_id_token_provider(self._gcp_auth_audience)
 
         check.invariant(
             port is not None if seven.IS_WINDOWS else True,
@@ -114,6 +136,19 @@ class DagsterGrpcClient:
     def use_ssl(self) -> bool:
         return self._use_ssl
 
+    @property
+    def gcp_auth_audience(self) -> str | None:
+        return self._gcp_auth_audience
+
+    def _tls_credentials(self) -> grpc.ChannelCredentials:
+        credentials = check.not_none(self._ssl_creds)
+        if self._gcp_id_token_provider is None:
+            return credentials
+        token = self._gcp_id_token_provider.get_token()
+        return grpc.composite_channel_credentials(
+            credentials, grpc.access_token_call_credentials(token)
+        )
+
     @contextmanager
     def _channel(self) -> Iterator[grpc.Channel]:
         options = [
@@ -123,7 +158,7 @@ class DagsterGrpcClient:
         with (
             grpc.secure_channel(
                 self._server_address,
-                self._ssl_creds,
+                self._tls_credentials(),
                 options=options,
                 compression=grpc.Compression.Gzip,
             )
@@ -143,10 +178,14 @@ class DagsterGrpcClient:
             ("grpc.max_send_message_length", max_send_bytes()),
         ]
         if self._use_ssl:
-            assert self._ssl_creds is not None
+            credentials = (
+                await asyncio.to_thread(self._tls_credentials)
+                if self._gcp_id_token_provider is not None
+                else check.not_none(self._ssl_creds)
+            )
             async with grpc.aio.secure_channel(
                 self._server_address,
-                self._ssl_creds,
+                credentials,
                 options=options,
                 compression=grpc.Compression.Gzip,
             ) as channel:
