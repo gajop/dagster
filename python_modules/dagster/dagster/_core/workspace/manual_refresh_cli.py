@@ -1,11 +1,9 @@
-import uuid
-
 import click
 
 from dagster._core.workspace.load_target import WorkspaceFileTarget
 
 # This module is also built into the standalone package.
-from .manual_refresh import deployment_cursor_key, load_workspace_locations  # noqa: TID252
+from .manual_refresh import load_workspace_locations, record_deployment_revision  # noqa: TID252
 
 
 @click.command(name="refresh")
@@ -32,8 +30,5 @@ def refresh_command(location_name: str, workspace: tuple[str, ...], revision: st
             raise click.ClickException(
                 f"Code location {location_name!r} needs refresh_policy: manual"
             )
-        revision = revision or uuid.uuid4().hex
-        instance.daemon_cursor_storage.set_cursor_values(
-            {deployment_cursor_key(location.origin): revision}
-        )
+        revision = record_deployment_revision(instance, location.origin, revision)
     click.echo(f"Requested metadata refresh for {location_name} at revision {revision}.")
