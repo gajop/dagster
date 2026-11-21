@@ -71,9 +71,32 @@ def test_instance_default_respects_executor_specified_on_job():
     assert config.execution.execution_engine_name == "in_process"
 
 
-def test_threaded_mode_requires_an_explicit_limit():
-    with pytest.raises(dg.DagsterInvalidConfigError, match="max_concurrent"):
-        dg.validate_run_config(parallel_job, {"execution": {"config": {"threaded": {}}}})
+@dg.resource
+def wide_thread_barrier():
+    return threading.Barrier(40, timeout=15)
+
+
+@dg.job(resource_defs={"thread_barrier": wide_thread_barrier, "io_manager": dg.mem_io_manager})
+def wide_parallel_job():
+    for i in range(40):
+        thread_identity.alias(f"step_{i}")()
+
+
+@pytest.mark.parametrize(
+    ("instance_config", "run_config"),
+    [
+        ({}, {"execution": {"config": {"threaded": {}}}}),
+        ({"default_executor": {"threaded": {}}}, {}),
+    ],
+    ids=["run-config", "instance-default"],
+)
+def test_threaded_mode_has_no_default_limit(instance_config, run_config):
+    with dg.instance_for_test(overrides=instance_config) as instance:
+        result = dg.execute_job(
+            dg.reconstructable(wide_parallel_job), instance=instance, run_config=run_config
+        )
+        assert result.success
+        assert sum(event.is_step_success for event in result.all_events) == 40
 
 
 @dg.op(out=dg.DynamicOut())

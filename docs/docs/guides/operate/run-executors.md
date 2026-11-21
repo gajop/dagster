@@ -66,11 +66,10 @@ Use this setting in `dagster.yaml` to select threaded execution when the job and
 
 ```yaml
 default_executor:
-  threaded:
-    max_concurrent: 8
+  threaded: {}
 ```
 
-Set `max_concurrent` to the maximum number of steps that may run concurrently within one run. Independent steps share the run worker process and its initialized resources. Shared resources and I/O managers must be thread-safe. Create clients tied to a particular thread or event loop inside the step that uses them. Cancellation stops scheduling steps and waits for the running steps to finish.
+Set `max_concurrent` in either configuration for an optional per-run step limit. By default, the executor places no limit on how many ready steps can run concurrently. Dagster concurrency pools still apply. Independent steps share the run worker process and its initialized resources. Shared resources and I/O managers must be thread-safe. Create clients tied to a particular thread or event loop inside the step that uses them. Cancellation stops scheduling steps and waits for the running steps to finish.
 
 ## Example executors
 

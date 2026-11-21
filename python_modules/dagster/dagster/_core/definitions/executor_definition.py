@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Callable, Mapping, Sequence
 from enum import Enum as PyEnum
 from functools import update_wrapper
@@ -313,7 +314,9 @@ def in_process_executor(init_context):
 THREADED_CONFIG = Field(
     {
         "max_concurrent": Field(
-            int, description="Maximum number of steps to execute concurrently."
+            Noneable(Int),
+            default_value=None,
+            description="Optional limit on concurrent steps per run.",
         ),
         "retries": get_retries_config(),
     },
@@ -324,11 +327,16 @@ THREADED_CONFIG = Field(
 def _core_threaded_executor_creation(config: ExecutorConfig) -> "InProcessExecutor":
     from dagster._core.executor.in_process import InProcessExecutor
 
-    max_concurrent = check.int_elem(config, "max_concurrent")
-    check.param_invariant(max_concurrent > 0, "max_concurrent", "Must be greater than zero.")
+    max_concurrent = check.opt_int_elem(config, "max_concurrent")
+    check.param_invariant(
+        max_concurrent is None or max_concurrent > 0,
+        "max_concurrent",
+        "Must be greater than zero if set.",
+    )
     return InProcessExecutor(
         retries=RetryMode.from_config(check.dict_elem(config, "retries")),  # type: ignore  # (possible none)
-        max_concurrent=max_concurrent,
+        # The pool creates threads on demand. None selects serial execution in this class.
+        max_concurrent=sys.maxsize if max_concurrent is None else max_concurrent,
     )
 
 
@@ -337,7 +345,7 @@ def threaded_executor(init_context):
     """Execute independent steps concurrently in threads in the run worker process.
 
     Select ``execution.config.threaded`` for jobs using the default executor. Set
-    ``max_concurrent`` to the number of worker threads.
+    ``max_concurrent`` for an optional per-run thread limit.
 
     Steps share resources and the process's stdout and stderr. Ops, resources, and I/O managers
     used concurrently must be thread-safe. Create thread-affine or event-loop-affine clients
@@ -533,7 +541,7 @@ def multi_or_in_process_executor(init_context: "InitExecutorContext") -> "Execut
 
     This is the executor available by default on a :py:class:`JobDefinition`
     that does not provide custom executors. Run config can select multiprocess, serial in-process,
-    or threaded execution. Set ``default_executor.threaded.max_concurrent`` in ``dagster.yaml``
+    or threaded execution. Set ``default_executor.threaded`` in ``dagster.yaml``
     to select threaded execution for runs that leave the executor unspecified.
 
     .. code-block:: yaml
