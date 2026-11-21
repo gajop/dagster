@@ -159,13 +159,23 @@ load_from:
       refresh_policy: manual
 ```
 
-After deploying a revision, record it against the same shared Dagster run storage as the webserver and daemon.
+After deploying a revision, send a request to the Dagster webserver through your normal authenticated ingress.
+
+```sh
+curl --fail-with-body "$DAGSTER_URL/api/code-locations/refresh" \
+  -H 'Content-Type: application/json' \
+  --data '{"location_name":"stable","revision":"release-42"}'
+```
+
+Include the webserver's path prefix in `DAGSTER_URL`, if configured. The API returns `202 Accepted` with the location name and queued revision. It requires the same location reload permission as the UI. Omit `revision` to force another refresh.
+
+The CLI is also available when you have access to the shared Dagster run storage.
 
 ```sh
 dagster workspace refresh -w workspace.yaml stable --revision "$REVISION"
 ```
 
-Both processes check shared instance storage every five seconds and refresh this location once per new revision. Omit `--revision` to force a refresh. If a refresh fails, the last working definitions remain available and you can request another refresh after fixing the location.
+Both processes check shared instance storage every five seconds and refresh this location once per new revision. If a refresh fails, the last working definitions remain available and you can request another refresh after fixing the location.
 
 Locations with `refresh_policy: periodic` or no refresh policy keep their normal behavior. Run launches and active sensor or schedule evaluations continue to contact their code locations.
 

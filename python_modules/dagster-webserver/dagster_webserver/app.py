@@ -5,6 +5,7 @@ from dagster._core.workspace.context import IWorkspaceProcessContext
 from starlette.applications import Starlette
 
 from dagster_webserver.webserver import DagsterWebserver
+from dagster_webserver.workspace_refresh_api import add_workspace_refresh_route
 
 
 def create_app_from_workspace_process_context(
@@ -30,8 +31,9 @@ def create_app_from_workspace_process_context(
 
     log_workspace_stats(instance, workspace_process_context)
 
-    return DagsterWebserver(
+    app = DagsterWebserver(
         workspace_process_context,
         path_prefix,
         live_data_poll_rate,
     ).create_asgi_app(**kwargs)
+    return add_workspace_refresh_route(app, workspace_process_context, path_prefix)

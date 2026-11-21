@@ -6,10 +6,10 @@ Build the wheel from the fork checkout and install it into the control plane env
 
 ```sh
 uv build python_modules/libraries/dagster-workspace-refresh
-uv pip install python_modules/libraries/dagster-workspace-refresh/dist/dagster_workspace_refresh-0.1.0-py3-none-any.whl
+uv pip install python_modules/libraries/dagster-workspace-refresh/dist/dagster_workspace_refresh-0.2.0-py3-none-any.whl
 ```
 
-In a uv project, use `uv add /path/to/dagster_workspace_refresh-0.1.0-py3-none-any.whl` to record it in `pyproject.toml`.
+In a uv project, use `uv add /path/to/dagster_workspace_refresh-0.2.0-py3-none-any.whl` to record it in `pyproject.toml`.
 
 ```yaml
 load_from:
@@ -26,7 +26,17 @@ dagster-refresh-webserver -w workspace.yaml
 dagster-refresh-daemon run -w workspace.yaml
 ```
 
-After the revision is ready, run this against the same shared Dagster run storage as the webserver and daemon.
+After the revision is ready, send a request through your normal webserver ingress.
+
+```sh
+curl --fail-with-body "$DAGSTER_URL/api/code-locations/refresh" \
+  -H 'Content-Type: application/json' \
+  --data '{"location_name":"stable","revision":"release-42"}'
+```
+
+Include the webserver's path prefix in `DAGSTER_URL`, if configured. The API returns `202 Accepted` and requires the location reload permission. Omit `revision` to force a refresh.
+
+The CLI is also available when you have access to the shared Dagster run storage.
 
 ```sh
 dagster-refresh-location -w workspace.yaml stable --revision "$REVISION"
