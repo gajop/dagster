@@ -146,6 +146,25 @@ load_from:
       location_name: 'my_grpc_server'
 ```
 
+### Authenticate to a Cloud Run code location
+
+Set `gcp_auth.audience` on a TLS gRPC location. Use the receiving Cloud Run service URL or a custom audience configured on that service.
+
+```yaml
+load_from:
+  - grpc_server:
+      location_name: private-pipelines
+      host: private-pipelines-example.run.app
+      port: 443
+      ssl: true
+      gcp_auth:
+        audience: https://private-pipelines-example.run.app
+```
+
+Install the fork with its `gcp-auth` extra in the webserver and daemon environments. In an existing uv project, `uv add 'google-auth>=2.29'` installs the same dependency. Give their runtime service accounts the Cloud Run Invoker role on the receiving service and configure that service for end-to-end HTTP/2.
+
+Dagster uses the caller's Google identity to obtain an ID token for the audience, caches and refreshes it, and sends it in gRPC `Authorization: Bearer` metadata. The code-location container keeps its usual Dagster command. [Cloud Run service-to-service authentication](https://docs.cloud.google.com/run/docs/authenticating/service-to-service)
+
 ### Deploy-triggered refresh for external gRPC locations
 Set `refresh_policy: manual` on an external gRPC location to load its definitions at startup and skip background server-ID checks and workspace metadata reloads.
 

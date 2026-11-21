@@ -703,6 +703,11 @@ class GrpcServerCodeLocation(CodeLocation):
                 host=self._host,
                 use_ssl=self._use_ssl,
                 metadata=grpc_metadata,
+                gcp_auth_audience=(
+                    self.origin.gcp_auth_audience
+                    if isinstance(self.origin, GrpcServerCodeLocationOrigin)
+                    else None
+                ),
             )
 
             list_repositories_response = sync_list_repositories_grpc(self.client)

@@ -282,7 +282,7 @@ class ManagedGrpcPythonEnvCodeLocationOrigin(IHaveNew, LegacyNamedTupleMixin, Co
 # Different storage name for backcompat
 @whitelist_for_serdes(
     storage_name="GrpcServerRepositoryLocationOrigin",
-    skip_when_empty_fields={"use_ssl", "additional_metadata"},
+    skip_when_empty_fields={"use_ssl", "additional_metadata", "gcp_auth_audience"},
 )
 @record_custom
 class GrpcServerCodeLocationOrigin(IHaveNew, LegacyNamedTupleMixin, CodeLocationOrigin):
@@ -296,6 +296,7 @@ class GrpcServerCodeLocationOrigin(IHaveNew, LegacyNamedTupleMixin, CodeLocation
     location_name: str
     use_ssl: bool | None
     additional_metadata: Mapping[str, Any] | None
+    gcp_auth_audience: str | None
 
     def __new__(
         cls,
@@ -305,6 +306,7 @@ class GrpcServerCodeLocationOrigin(IHaveNew, LegacyNamedTupleMixin, CodeLocation
         location_name: str | None = None,
         use_ssl: bool | None = None,
         additional_metadata: Mapping[str, Any] | None = None,
+        gcp_auth_audience: str | None = None,
     ):
         return super().__new__(
             cls,
@@ -316,6 +318,7 @@ class GrpcServerCodeLocationOrigin(IHaveNew, LegacyNamedTupleMixin, CodeLocation
             else _assign_grpc_location_name(port, socket, host),
             use_ssl=use_ssl,
             additional_metadata=additional_metadata,
+            gcp_auth_audience=gcp_auth_audience,
         )
 
     def get_display_metadata(self) -> Mapping[str, str]:
@@ -361,6 +364,7 @@ class GrpcServerCodeLocationOrigin(IHaveNew, LegacyNamedTupleMixin, CodeLocation
             socket=self.socket,
             host=self.host,
             use_ssl=bool(self.use_ssl),
+            gcp_auth_audience=self.gcp_auth_audience,
         )
 
     @property

@@ -48,9 +48,16 @@ def test_manual_refresh_keeps_origin_identity(tmp_path: Path):
     assert not with_policy["changing"].manual_refresh
 
 
-def test_dev_workspace_preserves_external_refresh_policy_and_ssl(tmp_path: Path):
+def test_dev_workspace_preserves_external_location_settings(tmp_path: Path):
     workspace = tmp_path / "workspace.yaml"
-    workspace.write_text(WORKSPACE)
+    workspace.write_text(
+        WORKSPACE.replace(
+            "      refresh_policy: manual",
+            "      refresh_policy: manual\n"
+            "      gcp_auth:\n"
+            "        audience: https://stable.example.com",
+        )
+    )
     with (
         instance_for_test() as instance,
         ProxyServerManager(instance, WorkspaceFileTarget([str(workspace)])) as manager,
@@ -58,6 +65,7 @@ def test_dev_workspace_preserves_external_refresh_policy_and_ssl(tmp_path: Path)
         stable, changing = (spec["grpc_server"] for spec in manager.get_code_server_specs())
         assert stable["refresh_policy"] == "manual"
         assert stable["ssl"] is True
+        assert stable["gcp_auth"] == {"audience": "https://stable.example.com"}
         assert "refresh_policy" not in changing
 
 
