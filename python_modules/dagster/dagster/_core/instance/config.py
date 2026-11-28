@@ -19,6 +19,7 @@ from dagster._config import (
     Selector,
     Shape,
     StringSource,
+    process_config,
     validate_config,
 )
 from dagster._config.source import BoolSource
@@ -128,15 +129,25 @@ def dagster_instance_config(
     if "concurrency" in dagster_config_dict:
         validate_concurrency_config(dagster_config_dict)
 
+    config_error_message = f"Errors whilst loading dagster instance config at {config_filename}."
     dagster_config = validate_config(schema, dagster_config_dict)
     if not dagster_config.success:
         raise DagsterInvalidConfigError(
-            f"Errors whilst loading dagster instance config at {config_filename}.",
+            config_error_message,
             dagster_config.errors,
             dagster_config_dict,
         )
 
     config_value = check.not_none(dagster_config.value)
+    # Resolve env references before these settings are copied into the instance ref.
+    settings_schema = {
+        key: schema[key] for key in ("default_executor", "ui") if key in config_value
+    }
+    settings = process_config(settings_schema, {key: config_value[key] for key in settings_schema})
+    if not settings.success:
+        raise DagsterInvalidConfigError(config_error_message, settings.errors, dagster_config_dict)
+    config_value = {**config_value, **check.not_none(settings.value)}
+
     environment_banner = config_value.get("ui", {}).get("environment_banner")
     if environment_banner:
         if not environment_banner["text"].strip():
@@ -536,7 +547,7 @@ def get_concurrency_config() -> Field:
 
 
 def dagster_instance_config_schema() -> Mapping[str, Field]:
-    from dagster._core.definitions.executor_definition import THREADED_CONFIG
+    from dagster._core.definitions.executor_definition import threaded_executor_config
 
     return {
         "local_artifact_storage": config_field_for_configurable_class(),
@@ -549,9 +560,15 @@ def dagster_instance_config_schema() -> Mapping[str, Field]:
         "scheduler": config_field_for_configurable_class(),
         "run_coordinator": config_field_for_configurable_class(),
         "run_launcher": config_field_for_configurable_class(),
-        "default_executor": Field(Selector({"threaded": THREADED_CONFIG}), is_required=False),
+        "default_executor": Field(
+            Selector({"threaded": threaded_executor_config(IntSource)}), is_required=False
+        ),
         "ui": Field(
-            {"environment_banner": Field({"text": str, "color": str}, is_required=False)},
+            {
+                "environment_banner": Field(
+                    {"text": StringSource, "color": StringSource}, is_required=False
+                )
+            },
             is_required=False,
         ),
         "telemetry": Field(

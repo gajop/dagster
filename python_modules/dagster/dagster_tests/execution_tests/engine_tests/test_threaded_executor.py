@@ -43,15 +43,20 @@ def parallel_job():
     [
         ({}, {"execution": {"config": {"threaded": {"max_concurrent": 2}}}}),
         ({"default_executor": {"threaded": {"max_concurrent": 2}}}, {}),
+        ({"default_executor": {"threaded": {"max_concurrent": {"env": "DAGSTER_THREADS"}}}}, {}),
         (
             {"default_executor": {"threaded": {"max_concurrent": 4}}},
             {"execution": {"config": {"threaded": {"max_concurrent": 2}}}},
         ),
     ],
-    ids=["run-config", "instance-default", "run-config-override"],
+    ids=["run-config", "instance-default", "instance-default-env", "run-config-override"],
 )
-def test_threads_execute_only_ready_steps_and_respect_max_concurrent(instance_config, run_config):
+def test_threads_execute_only_ready_steps_and_respect_max_concurrent(
+    instance_config, run_config, monkeypatch
+):
+    monkeypatch.setenv("DAGSTER_THREADS", "2")
     with dg.instance_for_test(overrides=instance_config) as instance:
+        monkeypatch.delenv("DAGSTER_THREADS")
         result = dg.execute_job(
             dg.reconstructable(parallel_job),
             instance=instance,

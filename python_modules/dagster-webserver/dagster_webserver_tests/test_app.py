@@ -126,11 +126,24 @@ def test_index_view_at_path_prefix(instance):
 
 
 @pytest.mark.parametrize(
-    "banner",
-    [None, {"text": 'PROD </script><script>"__PATH_PREFIX__"</script>', "color": "#b91c1c"}],
+    ("banner", "use_env"),
+    [
+        (None, False),
+        ({"text": 'PROD </script><script>"__PATH_PREFIX__"</script>', "color": "#b91c1c"}, False),
+        ({"text": "STAGING", "color": "#fbbf24"}, True),
+    ],
+    ids=["unset", "literal", "environment"],
 )
-def test_index_view_environment_banner(banner):
-    overrides = {"ui": {"environment_banner": banner}} if banner else {}
+def test_index_view_environment_banner(banner, use_env, monkeypatch):
+    banner_config = banner
+    if use_env:
+        monkeypatch.setenv("DAGSTER_BANNER_TEXT", banner["text"])
+        monkeypatch.setenv("DAGSTER_BANNER_COLOR", banner["color"])
+        banner_config = {
+            "text": {"env": "DAGSTER_BANNER_TEXT"},
+            "color": {"env": "DAGSTER_BANNER_COLOR"},
+        }
+    overrides = {"ui": {"environment_banner": banner_config}} if banner_config else {}
     with instance_for_test(overrides=overrides) as instance:
         with WorkspaceProcessContext(instance, workspace_load_target=None) as workspace:
             client = TestClient(create_app_from_workspace_process_context(workspace, "/dagster"))

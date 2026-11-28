@@ -311,17 +311,21 @@ def in_process_executor(init_context):
     return _core_in_process_executor_creation(init_context.executor_config)
 
 
-THREADED_CONFIG = Field(
-    {
-        "max_concurrent": Field(
-            Noneable(Int),
-            default_value=None,
-            description="Optional limit on concurrent steps per run.",
-        ),
-        "retries": get_retries_config(),
-    },
-    description="Execute independent steps concurrently in threads in the run worker process.",
-)
+def threaded_executor_config(max_concurrent_type: UserConfigSchema) -> Field:
+    return Field(
+        {
+            "max_concurrent": Field(
+                Noneable(max_concurrent_type),
+                default_value=None,
+                description="Optional limit on concurrent steps per run.",
+            ),
+            "retries": get_retries_config(),
+        },
+        description="Execute independent steps concurrently in threads in the run worker process.",
+    )
+
+
+THREADED_CONFIG = threaded_executor_config(Int)
 
 
 def _core_threaded_executor_creation(config: ExecutorConfig) -> "InProcessExecutor":

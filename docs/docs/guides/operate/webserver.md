@@ -35,7 +35,18 @@ ui:
     color: "#b91c1c"
 ```
 
-Use a quoted `#RGB` or `#RRGGBB` color. The UI picks black or white text for contrast. Restart the webserver to apply changes.
+Use a quoted `#RGB` or `#RRGGBB` color. The UI picks black or white text for contrast.
+
+To use the same config across deployments, set `DAGSTER_BANNER_TEXT` and `DAGSTER_BANNER_COLOR` in the service environment and reference them in `dagster.yaml`.
+
+```yaml
+ui:
+  environment_banner:
+    text: { env: DAGSTER_BANNER_TEXT }
+    color: { env: DAGSTER_BANNER_COLOR }
+```
+
+Restart the webserver to apply changes.
 
 ## Dagster UI reference
 
