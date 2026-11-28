@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from collections.abc import Mapping, Sequence
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional, cast
@@ -18,6 +19,7 @@ from dagster._config import (
     Selector,
     Shape,
     StringSource,
+    process_config,
     validate_config,
 )
 from dagster._config.source import BoolSource
@@ -127,15 +129,39 @@ def dagster_instance_config(
     if "concurrency" in dagster_config_dict:
         validate_concurrency_config(dagster_config_dict)
 
+    config_error_message = f"Errors whilst loading dagster instance config at {config_filename}."
     dagster_config = validate_config(schema, dagster_config_dict)
     if not dagster_config.success:
         raise DagsterInvalidConfigError(
-            f"Errors whilst loading dagster instance config at {config_filename}.",
+            config_error_message,
             dagster_config.errors,
             dagster_config_dict,
         )
 
-    return (check.not_none(dagster_config.value), custom_instance_class)
+    config_value = check.not_none(dagster_config.value)
+    # Resolve env references before these settings are copied into the instance ref.
+    if "ui" in config_value:
+        settings = process_config({"ui": schema["ui"]}, {"ui": config_value["ui"]})
+        if not settings.success:
+            raise DagsterInvalidConfigError(
+                config_error_message, settings.errors, dagster_config_dict
+            )
+        config_value = {**config_value, **check.not_none(settings.value)}
+
+    environment_banner = config_value.get("ui", {}).get("environment_banner")
+    if environment_banner:
+        if not environment_banner["text"].strip():
+            raise DagsterInvalidConfigError(
+                "`ui.environment_banner.text` must contain visible text.", [], environment_banner
+            )
+        if not re.fullmatch(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})", environment_banner["color"]):
+            raise DagsterInvalidConfigError(
+                "`ui.environment_banner.color` must use #RGB or #RRGGBB hex notation.",
+                [],
+                environment_banner,
+            )
+
+    return (config_value, custom_instance_class)
 
 
 def config_field_for_configurable_class() -> Field:
@@ -532,6 +558,14 @@ def dagster_instance_config_schema() -> Mapping[str, Field]:
         "scheduler": config_field_for_configurable_class(),
         "run_coordinator": config_field_for_configurable_class(),
         "run_launcher": config_field_for_configurable_class(),
+        "ui": Field(
+            {
+                "environment_banner": Field(
+                    {"text": StringSource, "color": StringSource}, is_required=False
+                )
+            },
+            is_required=False,
+        ),
         "telemetry": Field(
             {"enabled": Field(Bool, is_required=False)},
         ),

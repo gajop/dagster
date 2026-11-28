@@ -3,20 +3,20 @@ export const PREFIX_PLACEHOLDER = '__PATH_PREFIX__';
 export const TELEMETRY_PLACEHOLDER = '__TELEMETRY_ENABLED__';
 export const LIVE_DATA_POLL_RATE_PLACEHOLDER = '__LIVE_DATA_POLL_RATE__';
 export const INSTANCE_ID_PLACEHOLDER = '__INSTANCE_ID__';
+export const ENVIRONMENT_BANNER_PLACEHOLDER = '__ENVIRONMENT_BANNER__';
 
-let value:
-  | {pathPrefix: string; telemetryEnabled: boolean; liveDataPollRate?: number; instanceId: string}
-  | undefined = undefined;
-
-// Determine the path prefix value, which is set server-side.
-// This value will be used for prefixing paths for the GraphQL
-// endpoint and dynamically loaded bundles.
-export const extractInitializationData = (): {
+type InitializationData = {
   pathPrefix: string;
   telemetryEnabled: boolean;
   liveDataPollRate?: number;
   instanceId: string;
-} => {
+  environmentBanner?: {text: string; color: string};
+};
+
+let value: InitializationData | undefined;
+
+// Read settings that the webserver inserts into index.html.
+export const extractInitializationData = (): InitializationData => {
   if (!value) {
     value = {pathPrefix: '', telemetryEnabled: false, instanceId: ''};
     const element = document.getElementById(ELEMENT_ID);
@@ -33,6 +33,13 @@ export const extractInitializationData = (): {
       }
       if (parsed.instanceId !== INSTANCE_ID_PLACEHOLDER) {
         value.instanceId = parsed.instanceId;
+      }
+      const {environmentBanner} = parsed;
+      if (
+        typeof environmentBanner?.text === 'string' &&
+        typeof environmentBanner.color === 'string'
+      ) {
+        value.environmentBanner = environmentBanner;
       }
     }
   }

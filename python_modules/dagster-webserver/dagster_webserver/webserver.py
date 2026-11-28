@@ -237,6 +237,15 @@ class DagsterWebserver(
                         content = content.replace(
                             "__LIVE_DATA_POLL_RATE__", str(self._live_data_poll_rate)
                         )
+
+                    environment_banner = (context.instance.get_settings("ui") or {}).get(
+                        "environment_banner"
+                    )
+                    # Escape tags in text embedded in the initialization script.
+                    content = content.replace(
+                        '"__ENVIRONMENT_BANNER__"',
+                        json.dumps(environment_banner).replace("<", r"\u003c"),
+                    )
                     return HTMLResponse(content, headers=headers)
             except FileNotFoundError:
                 raise Exception(
