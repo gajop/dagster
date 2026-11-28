@@ -174,6 +174,11 @@ class InstanceConcurrencyContext:
         self._instance.event_log_storage.free_concurrency_slot_for_step(self._run_id, step_key)
         self._claims.remove(step_key)
 
+    def free_claimed_steps(self) -> None:
+        """Release remaining claims once the executor has joined all owned workers."""
+        for step_key in tuple(self._claims):
+            self.free_step(step_key)
+
 
 def _calculate_timeout_interval(sleep_interval: float | None, pending_claim_count: int) -> float:
     if sleep_interval is not None:

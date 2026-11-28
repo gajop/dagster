@@ -18,6 +18,7 @@ from dagster._config import (
     Selector,
     Shape,
     StringSource,
+    process_config,
     validate_config,
 )
 from dagster._config.source import BoolSource
@@ -127,15 +128,29 @@ def dagster_instance_config(
     if "concurrency" in dagster_config_dict:
         validate_concurrency_config(dagster_config_dict)
 
+    config_error_message = f"Errors whilst loading dagster instance config at {config_filename}."
     dagster_config = validate_config(schema, dagster_config_dict)
     if not dagster_config.success:
         raise DagsterInvalidConfigError(
-            f"Errors whilst loading dagster instance config at {config_filename}.",
+            config_error_message,
             dagster_config.errors,
             dagster_config_dict,
         )
 
-    return (check.not_none(dagster_config.value), custom_instance_class)
+    config_value = check.not_none(dagster_config.value)
+    # Resolve env references before these settings are copied into the instance ref.
+    if "default_executor" in config_value:
+        settings = process_config(
+            {"default_executor": schema["default_executor"]},
+            {"default_executor": config_value["default_executor"]},
+        )
+        if not settings.success:
+            raise DagsterInvalidConfigError(
+                config_error_message, settings.errors, dagster_config_dict
+            )
+        config_value = {**config_value, **check.not_none(settings.value)}
+
+    return (config_value, custom_instance_class)
 
 
 def config_field_for_configurable_class() -> Field:
@@ -521,6 +536,8 @@ def get_concurrency_config() -> Field:
 
 
 def dagster_instance_config_schema() -> Mapping[str, Field]:
+    from dagster._core.definitions.executor_definition import threaded_executor_config
+
     return {
         "local_artifact_storage": config_field_for_configurable_class(),
         "compute_logs": config_field_for_configurable_class(),
@@ -532,6 +549,9 @@ def dagster_instance_config_schema() -> Mapping[str, Field]:
         "scheduler": config_field_for_configurable_class(),
         "run_coordinator": config_field_for_configurable_class(),
         "run_launcher": config_field_for_configurable_class(),
+        "default_executor": Field(
+            Selector({"threaded": threaded_executor_config(IntSource)}), is_required=False
+        ),
         "telemetry": Field(
             {"enabled": Field(Bool, is_required=False)},
         ),
