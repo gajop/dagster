@@ -13,6 +13,36 @@ def test_instance_yaml_config_not_set(config_filename, caplog):
 
 
 @pytest.mark.parametrize(
+    ("text", "color", "invalid_field"),
+    [("  ", "#fff", "text"), ("PROD", "invalid-color", "color")],
+)
+@pytest.mark.parametrize("use_env", [False, True], ids=["literal", "environment"])
+def test_invalid_environment_banner(tmp_path, text, color, invalid_field, use_env, monkeypatch):
+    banner = {"text": text, "color": color}
+    if use_env:
+        monkeypatch.setenv("DAGSTER_BANNER_TEXT", text)
+        monkeypatch.setenv("DAGSTER_BANNER_COLOR", color)
+        banner = {"text": {"env": "DAGSTER_BANNER_TEXT"}, "color": {"env": "DAGSTER_BANNER_COLOR"}}
+    with pytest.raises(
+        dg.DagsterInvalidConfigError, match=rf"ui\.environment_banner\.{invalid_field}"
+    ):
+        dagster_instance_config(str(tmp_path), overrides={"ui": {"environment_banner": banner}})
+
+
+def test_missing_environment_banner_variable(tmp_path, monkeypatch):
+    monkeypatch.delenv("DAGSTER_BANNER_TEXT", raising=False)
+    with pytest.raises(dg.DagsterInvalidConfigError, match=r"DAGSTER_BANNER_TEXT.*not set"):
+        dagster_instance_config(
+            str(tmp_path),
+            overrides={
+                "ui": {
+                    "environment_banner": {"text": {"env": "DAGSTER_BANNER_TEXT"}, "color": "#fff"}
+                }
+            },
+        )
+
+
+@pytest.mark.parametrize(
     "config_filename",
     (
         "merged_run_coordinator_concurrency.yaml",

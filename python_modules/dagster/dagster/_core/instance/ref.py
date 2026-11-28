@@ -469,6 +469,7 @@ class InstanceRef(
 
         settings_keys = {
             "default_executor",
+            "ui",
             "telemetry",
             "python_logs",
             "run_monitoring",

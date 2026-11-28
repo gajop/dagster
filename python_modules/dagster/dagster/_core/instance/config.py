@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from collections.abc import Mapping, Sequence
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional, cast
@@ -139,16 +140,26 @@ def dagster_instance_config(
 
     config_value = check.not_none(dagster_config.value)
     # Resolve env references before these settings are copied into the instance ref.
-    if "default_executor" in config_value:
-        settings = process_config(
-            {"default_executor": schema["default_executor"]},
-            {"default_executor": config_value["default_executor"]},
-        )
-        if not settings.success:
+    settings_schema = {
+        key: schema[key] for key in ("default_executor", "ui") if key in config_value
+    }
+    settings = process_config(settings_schema, {key: config_value[key] for key in settings_schema})
+    if not settings.success:
+        raise DagsterInvalidConfigError(config_error_message, settings.errors, dagster_config_dict)
+    config_value = {**config_value, **check.not_none(settings.value)}
+
+    environment_banner = config_value.get("ui", {}).get("environment_banner")
+    if environment_banner:
+        if not environment_banner["text"].strip():
             raise DagsterInvalidConfigError(
-                config_error_message, settings.errors, dagster_config_dict
+                "`ui.environment_banner.text` must contain visible text.", [], environment_banner
             )
-        config_value = {**config_value, **check.not_none(settings.value)}
+        if not re.fullmatch(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})", environment_banner["color"]):
+            raise DagsterInvalidConfigError(
+                "`ui.environment_banner.color` must use #RGB or #RRGGBB hex notation.",
+                [],
+                environment_banner,
+            )
 
     return (config_value, custom_instance_class)
 
@@ -551,6 +562,14 @@ def dagster_instance_config_schema() -> Mapping[str, Field]:
         "run_launcher": config_field_for_configurable_class(),
         "default_executor": Field(
             Selector({"threaded": threaded_executor_config(IntSource)}), is_required=False
+        ),
+        "ui": Field(
+            {
+                "environment_banner": Field(
+                    {"text": StringSource, "color": StringSource}, is_required=False
+                )
+            },
+            is_required=False,
         ),
         "telemetry": Field(
             {"enabled": Field(Bool, is_required=False)},

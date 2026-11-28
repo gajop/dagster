@@ -5,6 +5,7 @@ import {Head, Html, Main, NextScript} from 'next/document';
 
 import {
   ELEMENT_ID,
+  ENVIRONMENT_BANNER_PLACEHOLDER,
   INSTANCE_ID_PLACEHOLDER,
   LIVE_DATA_POLL_RATE_PLACEHOLDER,
   PREFIX_PLACEHOLDER,
@@ -34,6 +35,7 @@ export default function Document() {
     telemetryEnabled: TELEMETRY_PLACEHOLDER,
     liveDataPollRate: LIVE_DATA_POLL_RATE_PLACEHOLDER,
     instanceId: isDev ? 'dev' : INSTANCE_ID_PLACEHOLDER,
+    environmentBanner: ENVIRONMENT_BANNER_PLACEHOLDER,
   };
   const prefix = getPrefix();
   return (
