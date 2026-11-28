@@ -542,6 +542,7 @@ def _reexecute_job(
                 step_keys_to_execute=step_keys,
                 known_state=known_state,
                 tags=parent_dagster_run.tags,
+                instance_ref=execute_instance.get_ref() if execute_instance.is_persistent else None,
             )
         elif reexecution_options.step_selection:
             execution_plan = _resolve_reexecute_step_selection(
@@ -705,7 +706,14 @@ def create_execution_plan(
         repository_load_data, "repository_load_data", RepositoryLoadData
     )
 
-    resolved_run_config = ResolvedRunConfig.build(job_def, run_config)
+    resolved_run_config = ResolvedRunConfig.build(
+        job_def,
+        run_config,
+        default_executor=check.opt_mapping_param(
+            instance_ref.settings.get("default_executor") if instance_ref else None,
+            "default_executor",
+        ),
+    )
 
     return ExecutionPlan.build(
         job_def,
@@ -931,11 +939,13 @@ def _resolve_reexecute_step_selection(
         job = job.get_subset(op_selection=parent_dagster_run.op_selection)
 
     state = KnownExecutionState.build_for_reexecution(instance, parent_dagster_run)
+    instance_ref = instance.get_ref() if instance.is_persistent else None
 
     parent_plan = create_execution_plan(
         job,
         parent_dagster_run.run_config,
         known_state=state,
+        instance_ref=instance_ref,
     )
     step_keys_to_execute = parse_step_selection(parent_plan.get_all_step_deps(), step_selection)
     return create_execution_plan(
@@ -944,6 +954,7 @@ def _resolve_reexecute_step_selection(
         step_keys_to_execute=list(step_keys_to_execute),
         known_state=state.update_for_step_selection(step_keys_to_execute),
         tags=parent_dagster_run.tags,
+        instance_ref=instance_ref,
     )
 
 

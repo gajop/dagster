@@ -19,6 +19,7 @@ Executors can range from single-process serial executors to managing per-step co
 
 - [Directly on jobs](#directly-on-jobs)
 - [For a code location](#for-a-code-location)
+- [In YAML](#in-yaml)
 
 ### Directly on jobs
 
@@ -49,6 +50,34 @@ If a job explicitly specifies an executor, then that executor will be used. Othe
 Executing a job via <PyObject section="jobs" module="dagster" object="JobDefinition" method="execute_in_process" /> overrides the job's executor and uses <PyObject section="execution" module="dagster" object="in_process_executor" /> instead.
 
 :::
+
+### In YAML
+
+This run configuration selects `threaded` for a job that uses Dagster's built-in executor.
+
+```yaml
+execution:
+  config:
+    threaded:
+      max_concurrent: 8
+```
+
+Use this setting in `dagster.yaml` to select threaded execution when the job and its run configuration leave the executor unspecified.
+
+```yaml
+default_executor:
+  threaded: {}
+```
+
+Set `max_concurrent` in either configuration for an optional per-run step limit. By default, the executor places no limit on how many ready steps can run concurrently. Dagster concurrency pools still apply. Independent steps share the run worker process and its initialized resources. Shared resources and I/O managers must be thread-safe. Create clients tied to a particular thread or event loop inside the step that uses them. Cancellation stops scheduling steps and waits for the running steps to finish.
+
+To set the instance limit from an environment variable, set `DAGSTER_THREADS` to a positive integer and reference it in `dagster.yaml`.
+
+```yaml
+default_executor:
+  threaded:
+    max_concurrent: { env: DAGSTER_THREADS }
+```
 
 ## Example executors
 

@@ -101,7 +101,9 @@ def create_context_creation_data(
     instance: DagsterInstance,
 ) -> "ContextCreationData":
     job_def = job.get_definition()
-    resolved_run_config = ResolvedRunConfig.build(job_def, run_config)
+    resolved_run_config = ResolvedRunConfig.build(
+        job_def, run_config, default_executor=instance.get_settings("default_executor")
+    )
 
     executor_def = job_def.executor_def
 

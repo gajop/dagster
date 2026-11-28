@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Callable, Mapping, Sequence
 from enum import Enum as PyEnum
 from functools import update_wrapper
@@ -310,6 +311,54 @@ def in_process_executor(init_context):
     return _core_in_process_executor_creation(init_context.executor_config)
 
 
+def threaded_executor_config(max_concurrent_type: UserConfigSchema) -> Field:
+    return Field(
+        {
+            "max_concurrent": Field(
+                Noneable(max_concurrent_type),
+                default_value=None,
+                description="Optional limit on concurrent steps per run.",
+            ),
+            "retries": get_retries_config(),
+        },
+        description="Execute independent steps concurrently in threads in the run worker process.",
+    )
+
+
+THREADED_CONFIG = threaded_executor_config(Int)
+
+
+def _core_threaded_executor_creation(config: ExecutorConfig) -> "InProcessExecutor":
+    from dagster._core.executor.in_process import InProcessExecutor
+
+    max_concurrent = check.opt_int_elem(config, "max_concurrent")
+    check.param_invariant(
+        max_concurrent is None or max_concurrent > 0,
+        "max_concurrent",
+        "Must be greater than zero if set.",
+    )
+    return InProcessExecutor(
+        retries=RetryMode.from_config(check.dict_elem(config, "retries")),  # type: ignore  # (possible none)
+        # The pool creates threads on demand. None selects serial execution in this class.
+        max_concurrent=sys.maxsize if max_concurrent is None else max_concurrent,
+    )
+
+
+@executor(name="threaded", config_schema=THREADED_CONFIG)
+def threaded_executor(init_context):
+    """Execute independent steps concurrently in threads in the run worker process.
+
+    Select ``execution.config.threaded`` for jobs using the default executor. Set
+    ``max_concurrent`` for an optional per-run thread limit.
+
+    Steps share resources and the process's stdout and stderr. Ops, resources, and I/O managers
+    used concurrently must be thread-safe. Create thread-affine or event-loop-affine clients
+    inside the step that uses them. Cancellation stops scheduling new steps and waits for
+    running steps to finish.
+    """
+    return _core_threaded_executor_creation(init_context.executor_config)
+
+
 @executor(name="execute_in_process_executor")
 def execute_in_process_executor(_) -> "InProcessExecutor":
     """Executor used by execute_in_process.
@@ -481,7 +530,11 @@ def _get_default_executor_requirements(
     name="multi_or_in_process_executor",
     config_schema=Field(
         Selector(
-            {"multiprocess": MULTI_PROC_CONFIG, "in_process": IN_PROC_CONFIG},
+            {
+                "multiprocess": MULTI_PROC_CONFIG,
+                "in_process": IN_PROC_CONFIG,
+                "threaded": THREADED_CONFIG,
+            },
         ),
         default_value={"multiprocess": {}},
     ),
@@ -491,9 +544,9 @@ def multi_or_in_process_executor(init_context: "InitExecutorContext") -> "Execut
     """The default executor for a job.
 
     This is the executor available by default on a :py:class:`JobDefinition`
-    that does not provide custom executors. This executor has a multiprocessing-enabled mode, and a
-    single-process mode. By default, multiprocessing mode is enabled. Switching between multiprocess
-    mode and in-process mode can be achieved via config.
+    that does not provide custom executors. Run config can select multiprocess, serial in-process,
+    or threaded execution. Set ``default_executor.threaded`` in ``dagster.yaml``
+    to select threaded execution for runs that leave the executor unspecified.
 
     .. code-block:: yaml
 
@@ -505,6 +558,11 @@ def multi_or_in_process_executor(init_context: "InitExecutorContext") -> "Execut
         execution:
           config:
             in_process:
+
+        execution:
+          config:
+            threaded:
+              max_concurrent: 8
 
     When using the multiprocess mode, ``max_concurrent`` and ``retries`` can also be configured.
 
@@ -531,7 +589,10 @@ def multi_or_in_process_executor(init_context: "InitExecutorContext") -> "Execut
         return _core_multiprocess_executor_creation(
             check.dict_elem(init_context.executor_config, "multiprocess")
         )
-    else:
-        return _core_in_process_executor_creation(
-            check.dict_elem(init_context.executor_config, "in_process")
+    if "threaded" in init_context.executor_config:
+        return _core_threaded_executor_creation(
+            check.dict_elem(init_context.executor_config, "threaded")
         )
+    return _core_in_process_executor_creation(
+        check.dict_elem(init_context.executor_config, "in_process")
+    )

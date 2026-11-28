@@ -339,6 +339,8 @@ class PlanExecutionContext(IPlanContext):
         self,
         step: ExecutionStep,
         known_state: Optional["KnownExecutionState"] = None,
+        *,
+        event_loop: AbstractEventLoop | None = None,
     ) -> "StepExecutionContext":
         # TODO: refactoring to build up reasonable layer of prefetching -- 2024-04-27 schrockn
         # if is_step_in_asset_graph_layer(step, self.job_def):
@@ -351,7 +353,7 @@ class PlanExecutionContext(IPlanContext):
             step=step,
             output_capture=self.output_capture,
             known_state=known_state,
-            event_loop=self.event_loop,
+            event_loop=event_loop if event_loop is not None else self.event_loop,
         )
 
     @property
